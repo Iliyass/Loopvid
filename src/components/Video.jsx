@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Player, ControlBar, PlayToggle, BigPlayButton } from 'video-react';
+import { Player, ControlBar, PlayToggle, BigPlayButton, 
+         ProgressControl, VolumeMenuButton, FullscreenToggle,
+         CurrentTimeDisplay, DurationDisplay } from 'video-react';
 import screenfull from 'screenfull'
 import Hammer from 'hammerjs'
 
@@ -13,8 +15,10 @@ export default class Video extends Component {
   constructor(props){
     super(props)
     this.state = {
-      player: {}
+      player: {},
+      zoomed: false
     }
+    this.handlePortraitFullscreen = this.handlePortraitFullscreen.bind(this)
   }
   componentDidMount() {
     // subscribe state change
@@ -26,37 +30,11 @@ export default class Video extends Component {
     this.setState({
       player: state
     });
-
-    const hammeredVideo = new Hammer(this.refs.player.video.video);
-    hammeredVideo.add(new Hammer.Tap({ event: 'doubletap', taps: 2 }));
-    hammeredVideo.on('doubletap', (ev) => {
-      this.refs.player.toggleFullscreen()
-    })
-
-    if(!prevState.isFullscreen && state.isFullscreen){
-      console.log("aspect", state.videoWidth / state.videoHeight)    
-      
-      if(state.videoWidth / state.videoHeight < 1) return;   
-
-      
-      // var doubleTap = new Hammer.Tap({event: 'swipe'  });
-      // hammeredVideo.add(doubleTap);
-      // hammeredVideo.on('panleft panright', (ev) => {
-      //   console.log(ev)
-      //   // this.refs.player.replay(ev.deltaX * 0.1)
-      // })
-      // hammeredVideo.on('panright', (ev) => {
-      //   this.refs.player.forward(ev.deltaX * 0.1)
-      // })
-      // console.log("hammeredVideo", hammeredVideo)
-      return setTimeout( () => {
-        this.refs.player.video.video.style.width = `${document.documentElement.scrollHeight}px`
-      })
-    }
-    if(prevState.isFullscreen && !state.isFullscreen){
-      this.refs.player.video.video.style.width = this._width   
-    }
-
+  }
+  handlePortraitFullscreen(){
+    const zoomWidth = this.state.zoomed ? this._width : `${document.documentElement.scrollHeight}px`
+    this.refs.player.video.video.style.width = zoomWidth
+    this.setState({ zoomed: !this.state.zoomed })
   }
   render(){
     return (
@@ -72,7 +50,19 @@ export default class Video extends Component {
       {! this.state.player.hasStarted && 
         <PlayButton onClick={() => this.refs.player.play()} />
       }
-
+        <ControlBar disableDefaultControls={true} >
+          <PlayToggle />
+          <CurrentTimeDisplay />
+          <ProgressControl />
+          <DurationDisplay />
+          <VolumeMenuButton vertical={true} />          
+          <FullscreenToggle />
+          { this.state.player.isFullscreen && 
+            <button order={9} onClick={this.handlePortraitFullscreen}>
+              Grand
+            </button>
+          }
+        </ControlBar>
       </Player>
     )
   }
