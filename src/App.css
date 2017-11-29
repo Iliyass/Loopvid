@@ -26,3 +26,26 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+@import "../node_modules/video-react/dist/video-react.css";
+
+.video-react .video-react-big-play-button {
+  display: "none" !important;
+}
+.video-react .video-react-big-play-button {
+  display: none;
+}
+.video-react.video-react-fullscreen {
+  position:absolute;
+  height:100%;
+  width:100%;
+  overflow: hidden;
+}
+.video-react.video-react-fullscreen video.video-react-video{
+  min-width: 100%;
+  min-height: 100%;
+  /* width: calc(100%); */
+}
+/* .video-react.video-react-fullscreen > video {
+  width: 1000px
+} */

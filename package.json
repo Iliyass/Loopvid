@@ -3,9 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "classnames": "^2.2.5",
+    "hammerjs": "^2.0.8",
+    "material-design-icons": "^3.0.1",
+    "material-ui": "^1.0.0-beta.21",
+    "material-ui-icons": "^1.0.0-beta.17",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
-    "react-scripts": "1.0.17"
+    "react-on-screen": "^2.0.1",
+    "react-scripts": "1.0.17",
+    "redux": "^3.7.2",
+    "screenfull": "^3.3.2",
+    "typeface-roboto": "0.0.45",
+    "video-react": "^0.8.10",
+    "video-resize": "^0.6.7"
   },
   "scripts": {
     "start": "react-scripts start",
