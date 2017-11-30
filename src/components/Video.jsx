@@ -19,11 +19,32 @@ export default class Video extends Component {
       zoomed: false
     }
     this.handlePortraitFullscreen = this.handlePortraitFullscreen.bind(this)
+    this._previousDelta = 0
   }
   componentDidMount() {
     // subscribe state change
     this.refs.player.subscribeToStateChange(this.handleStateChange.bind(this));
     this._width = this.refs.player.video.video.style.width
+    
+    return;
+
+    const hammeredVideo = new Hammer(this.refs.player.video.video);
+    hammeredVideo.on('panleft', (ev) => {
+      console.log("panleft", `${ this._previousDelta || 0 + ev.deltaX}px`, this._previousDelta, ev.deltaX)    
+      let valueToLeft = 0;
+      if(this._previousDelta && this._previousDelta < ev.deltaX){
+        this._previousDelta = (this._previousDelta + Math.abs(ev.deltaX)) * -1
+      }
+      this._previousDelta = (this._previousDelta + Math.abs(ev.deltaX)) * -1
+      
+      this.refs.player.video.video.style.left = `${this._previousDelta}px`
+    })
+
+    hammeredVideo.on('panright', (ev) => {
+      console.log("panright", `${this._previousDelta || 0 - Math.abs(ev.deltaX)}px`)
+      this.refs.player.video.video.style.left = `${this._previousDelta || 0 - Math.abs(ev.deltaX)}px`
+      
+    })
   }
   handleStateChange(state, prevState) {
     // copy player state to this component's state
@@ -32,19 +53,20 @@ export default class Video extends Component {
     });
   }
   handlePortraitFullscreen(){
-    const zoomWidth = this.state.zoomed ? this._width : `${document.documentElement.scrollHeight}px`
+    const zoomWidth = this.state.zoomed ? "100%" : "auto"
     this.refs.player.video.video.style.width = zoomWidth
     this.setState({ zoomed: !this.state.zoomed })
   }
   render(){
+    console.log("this.props", this.props)
     return (
       <Player
         preload={"metadata"}
         ref="player"
-        poster="https://lorempixel.com/400/200/sports/"
+        poster={this.props.poster}
         muted
         playsInline
-        src="bunny.mp4"
+        src={this.props.videoSrc}
         aspectRatio="16:9"
       >
       {! this.state.player.hasStarted && 
@@ -59,7 +81,7 @@ export default class Video extends Component {
           <FullscreenToggle />
           { this.state.player.isFullscreen && 
             <button order={9} onClick={this.handlePortraitFullscreen}>
-              Grand
+              Grand {/*icon => crop_portrait */}
             </button>
           }
         </ControlBar>

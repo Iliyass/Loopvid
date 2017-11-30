@@ -49,3 +49,10 @@
 /* .video-react.video-react-fullscreen > video {
   width: 1000px
 } */
+
+.video-react .video-react-poster {
+  background-size: cover;
+}
+.video-react.video-react-fluid {
+  min-height:380px
+}
