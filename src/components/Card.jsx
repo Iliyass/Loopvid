@@ -17,7 +17,7 @@ import MoreVertIcon from 'material-ui-icons/MoreVert';
 import Video from './Video';
 import classnames from 'classnames';
 
-const styles = {
+const styles = theme => ({
   root: {
     flex: "1 0 auto"
   },
@@ -31,7 +31,8 @@ const styles = {
   media: {
     // height: 200,
   },
-};
+  iconButton:theme.typography.button,
+})
 
 function SimpleMediaCard(props) {
   const { classes, isVisible, title, poster, videoSrc } = props;
@@ -55,11 +56,12 @@ function SimpleMediaCard(props) {
         <CardActions >
             <IconButton>
               <ThumbUp />
+              <Typography className={classes.iconButton} >233K</Typography>
             </IconButton>
             <IconButton>
-              <ThumbDown />
+              <ThumbDown /> <Typography className={classes.iconButton} >23</Typography>
             </IconButton>
-            <IconButton aria-label="Share">
+            <IconButton  aria-label="Share">
               <ShareIcon />
             </IconButton>
           </CardActions>

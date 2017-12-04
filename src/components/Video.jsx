@@ -4,6 +4,9 @@ import { Player, ControlBar, PlayToggle, BigPlayButton,
          CurrentTimeDisplay, DurationDisplay } from 'video-react';
 import screenfull from 'screenfull'
 import Hammer from 'hammerjs'
+import AspectRatio from 'material-ui-icons/AspectRatio';
+import IconButton from 'material-ui/IconButton';
+
 
 const PlayButton = ({ onClick }) => (
   <div onClick={onClick} className="video-react-bezel" role="status" aria-label="play">
@@ -28,23 +31,23 @@ export default class Video extends Component {
     
     return;
 
-    const hammeredVideo = new Hammer(this.refs.player.video.video);
-    hammeredVideo.on('panleft', (ev) => {
-      console.log("panleft", `${ this._previousDelta || 0 + ev.deltaX}px`, this._previousDelta, ev.deltaX)    
-      let valueToLeft = 0;
-      if(this._previousDelta && this._previousDelta < ev.deltaX){
-        this._previousDelta = (this._previousDelta + Math.abs(ev.deltaX)) * -1
-      }
-      this._previousDelta = (this._previousDelta + Math.abs(ev.deltaX)) * -1
+    // const hammeredVideo = new Hammer(this.refs.player.video.video);
+    // hammeredVideo.on('panleft', (ev) => {
+    //   console.log("panleft", `${ this._previousDelta || 0 + ev.deltaX}px`, this._previousDelta, ev.deltaX)    
+    //   let valueToLeft = 0;
+    //   if(this._previousDelta && this._previousDelta < ev.deltaX){
+    //     this._previousDelta = (this._previousDelta + Math.abs(ev.deltaX)) * -1
+    //   }
+    //   this._previousDelta = (this._previousDelta + Math.abs(ev.deltaX)) * -1
       
-      this.refs.player.video.video.style.left = `${this._previousDelta}px`
-    })
+    //   this.refs.player.video.video.style.left = `${this._previousDelta}px`
+    // })
 
-    hammeredVideo.on('panright', (ev) => {
-      console.log("panright", `${this._previousDelta || 0 - Math.abs(ev.deltaX)}px`)
-      this.refs.player.video.video.style.left = `${this._previousDelta || 0 - Math.abs(ev.deltaX)}px`
+    // hammeredVideo.on('panright', (ev) => {
+    //   console.log("panright", `${this._previousDelta || 0 - Math.abs(ev.deltaX)}px`)
+    //   this.refs.player.video.video.style.left = `${this._previousDelta || 0 - Math.abs(ev.deltaX)}px`
       
-    })
+    // })
   }
   handleStateChange(state, prevState) {
     // copy player state to this component's state
@@ -58,7 +61,6 @@ export default class Video extends Component {
     this.setState({ zoomed: !this.state.zoomed })
   }
   render(){
-    console.log("this.props", this.props)
     return (
       <Player
         preload={"metadata"}
@@ -79,10 +81,10 @@ export default class Video extends Component {
           <DurationDisplay />
           <VolumeMenuButton vertical={true} />          
           <FullscreenToggle />
-          { this.state.player.isFullscreen && 
-            <button order={9} onClick={this.handlePortraitFullscreen}>
-              Grand {/*icon => crop_portrait */}
-            </button>
+          { true && 
+                  <button onClick={this.handlePortraitFullscreen}>
+                    <AspectRatio />
+                  </button>
           }
         </ControlBar>
       </Player>

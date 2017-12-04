@@ -4,32 +4,19 @@ import logo from './logo.svg';
 import './App.css';
 import Card from './components/Card';
 import Mobile from './containers/Mobile';
+import Recent from './containers/Recent';
+import { Router, Route, Link } from 'react-router-dom'
+import createHistory from 'history/createBrowserHistory'
+const history = createHistory()
 
-const items = [
-  {
-    title: "Lorem Ipsum After HD should be here",
-    poster: "http://lorempixel.com/300/500/people",
-    videoSrc: "portrait.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/nightlife",
-    videoSrc: "portrait3.mp4"
-  },
-]
 class App extends Component {
   render() {
     return (
-        <Mobile>
-          {
-            items.map((i, id) => <Card key={id} {...i} />)
-          }
-        </Mobile>
+          <Router history={history}>
+            <Mobile history={history}>
+                <Route exact={true} path="/" component={Recent} />
+            </Mobile>
+          </Router>
     );
   }
 }
