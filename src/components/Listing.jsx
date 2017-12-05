@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Card from './Card';
 import Grid from 'material-ui/Grid';
+import TrackVisibility from 'react-on-screen';
 
 class Listing extends React.Component {
   render(){
@@ -9,7 +10,9 @@ class Listing extends React.Component {
       <Grid container  justify="space-around" alignItems="center" direction="column">
         {this.props.items.map((c, i) => (
           <Grid style={{ width: "100%"}} item key={i}>
-            <Card {...c} />              
+            <TrackVisibility>
+              <Card {...c} />  
+            </TrackVisibility>            
           </Grid>
         ))}      
       </Grid> 

@@ -124,7 +124,6 @@ const styles = theme => ({
   container: {
     flexGrow: 1,
     position: 'relative',
-    height: 200,
   },
   suggestionsContainerOpen: {
     position: 'absolute',
@@ -141,8 +140,9 @@ const styles = theme => ({
     padding: 0,
     listStyleType: 'none',
   },
-  textField: {
+  input: {
     width: '100%',
+    color: "white"
   },
 });
 
@@ -175,7 +175,7 @@ class IntegrationAutosuggest extends React.Component {
 
   render() {
     const { classes } = this.props;
-
+    console.log("Classes", classes)
     return (
       <Autosuggest
         theme={{

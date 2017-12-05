@@ -24,6 +24,15 @@ export default class Video extends Component {
     this.handlePortraitFullscreen = this.handlePortraitFullscreen.bind(this)
     this._previousDelta = 0
   }
+  componentWillReceiveProps(props){
+    console.log("PROPS", props)
+    if(props.isVisible){
+      return this.refs.player.play()
+    }
+    if(! props.isVisible){
+      return this.refs.player.pause()      
+    }
+  }
   componentDidMount() {
     // subscribe state change
     this.refs.player.subscribeToStateChange(this.handleStateChange.bind(this));

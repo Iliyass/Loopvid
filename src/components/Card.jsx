@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent, CardMedia, CardHeader } from 'material-ui/Card';
@@ -16,6 +16,7 @@ import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
 import MoreVertIcon from 'material-ui-icons/MoreVert';
 import Video from './Video';
 import classnames from 'classnames';
+import CardMenu from './CardMenu';
 
 const styles = theme => ({
   root: {
@@ -25,52 +26,85 @@ const styles = theme => ({
     // maxWidth: 345,
     // width: document.body.clientWidth ,
     width: "100%",
-    minHeight: "120%" 
+    minHeight: "120%"
 
   },
   media: {
     // height: 200,
   },
-  iconButton:theme.typography.button,
+  iconButton: {
+    ...theme.typography.button,
+    margin: 10
+  },
+  flexGrow: {
+    flex: '1 1 auto',
+  },
+  controls: {
+    display: 'flex',
+    alignItems: 'center',
+    paddingLeft: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+
+  },
+  likeButton: {
+    ...theme.typography.iconButton,
+    marginLeft: 15,
+    marginRight: 34,
+  }
 })
 
-function SimpleMediaCard(props) {
-  const { classes, isVisible, title, poster, videoSrc } = props;
-  return (
+class LVCard extends Component {
+  constructor(props){
+    super(props)
+    this.state = {
+
+    }
+    this.handleCardMenuClick = this.handleCardMenuClick.bind(this)
+  }
+  handleCardMenuClick(){
+
+  }
+  render() {
+    const { classes, isVisible, title, poster, videoSrc } = this.props;
+    return (
       <Card className={classes.card}>
         <CardHeader
-              avatar={
-                <Avatar aria-label="Recipe" className={classes.avatar}>
-                  R
+          avatar={
+            <Avatar aria-label="Recipe" className={classes.avatar}>
+              R
                 </Avatar>
-              }
-              action={
-                <IconButton>
-                  <MoreVertIcon />
-                </IconButton>
-              }
-              title={title}
-              subheader="September 14, 2016"
-            />
-        <Video poster={poster} videoSrc={videoSrc}  play={isVisible} pause={!isVisible} />
+          }
+          action={
+            <CardMenu />
+          }
+          title={title}
+          subheader="September 14, 2016"
+        />
+        <Video poster={poster} videoSrc={videoSrc} isVisible={isVisible} />
         <CardActions >
-            <IconButton>
+          <div className={classes.controls}>
+            <IconButton className={classes.likeButton}>
               <ThumbUp />
               <Typography className={classes.iconButton} >233K</Typography>
             </IconButton>
             <IconButton>
-              <ThumbDown /> <Typography className={classes.iconButton} >23</Typography>
+              <ThumbDown />
+              <Typography className={classes.iconButton} >23</Typography>
             </IconButton>
-            <IconButton  aria-label="Share">
+          </div>
+          <div className={classes.flexGrow} />
+          {/* <IconButton aria-label="Show more">
               <ShareIcon />
-            </IconButton>
-          </CardActions>
+            </IconButton> */}
+        </CardActions>
       </Card>
-  );
+    );
+  }
+
 }
 
-SimpleMediaCard.propTypes = {
+LVCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(SimpleMediaCard);
+export default withStyles(styles)(LVCard);

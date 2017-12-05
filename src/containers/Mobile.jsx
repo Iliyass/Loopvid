@@ -130,9 +130,7 @@ handleNavigate(routeValue){
 renderSearchBar(){
   const { classes } = this.props;
   return (
-    <Paper  className={classes.rootPaper} elevation={1}>
       <Autocomplete onSearch={this.handleSearch} />
-    </Paper>
   )
 }
 render() {
@@ -144,10 +142,10 @@ render() {
     <div className={classes.root}>
       <AppBar position="fixed">
         <Toolbar>
-        <IconButton className={classes.menuButton} color="contrast" aria-label="Menu">
-                <MenuIcon />
-              </IconButton>
           { ! this.state.searchMode ? [
+              <IconButton className={classes.menuButton} color="contrast" aria-label="Menu">
+                <MenuIcon />
+              </IconButton>,
               <Typography type="title" color="inherit" className={classes.flex}>
                 Loopvid
               </Typography>
@@ -158,7 +156,7 @@ render() {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <div style={{ marginTop: 73 }} >
+      <div style={{ marginTop: "13%" }} >
         {this.props.children}
         <LabelBottomNavigationStyled activePath={this.props.history.location.pathname} onNavigate={this.handleNavigate} />        
       </div>

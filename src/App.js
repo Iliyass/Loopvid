@@ -5,6 +5,7 @@ import './App.css';
 import Card from './components/Card';
 import Mobile from './containers/Mobile';
 import Recent from './containers/Recent';
+import Categories from './containers/Categories';
 import { Router, Route, Link } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory'
 const history = createHistory()
@@ -15,6 +16,7 @@ class App extends Component {
           <Router history={history}>
             <Mobile history={history}>
                 <Route exact={true} path="/" component={Recent} />
+                <Route exact={true} path="/categories" component={Categories} />
             </Mobile>
           </Router>
     );

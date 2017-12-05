@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Listing from '../components/Listing';
+import Filters from '../components/Filters';
 
 const items = [
   {
@@ -64,7 +65,10 @@ class Recent extends Component {
   render(){
     console.log("shit", items)
     return (
-        <Listing items={items} />
+        <div>
+          <Filters />
+          <Listing items={items} />          
+        </div>
     )
   }
 }
