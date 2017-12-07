@@ -27,6 +27,8 @@ import Paper from 'material-ui/Paper';
 import Filters from '../components/Filters';
 import FilterListIcon from 'material-ui-icons/FilterList';
 
+import Sidebar from '../components/Sidebar';
+
 
 const stylesNav = {
   root: {
@@ -131,7 +133,8 @@ constructor(props){
   this.state = {
     searchMode: false,
     nestedRoute: false,
-    filtersOpen: false
+    filtersOpen: false,
+    sidebarOpen: false
   }
 }
 handleNavigate(routeValue){
@@ -147,6 +150,7 @@ render() {
   const { classes } = this.props;
   return (
     <div className={classes.root}>
+      <Sidebar open={this.state.sidebarOpen} onClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} onRequestClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} />
       <AppBar position="fixed">
         <Toolbar>
           { ! this.state.searchMode ? [
@@ -154,7 +158,7 @@ render() {
                 <IconButton key={"menu-1"} className={classes.menuButton} color="contrast" aria-label="Menu">
                   <ArrowBack />
                 </IconButton>
-                : <IconButton key={"menu-2"} className={classes.menuButton} color="contrast" aria-label="Menu">
+                : <IconButton onClick={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} key={"menu-2"} className={classes.menuButton} color="contrast" aria-label="Menu">
                   <MenuIcon />
                 </IconButton>
               ,
