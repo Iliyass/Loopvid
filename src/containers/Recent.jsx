@@ -5,53 +5,18 @@ import Filters from '../components/Filters';
 
 const items = [
   {
-    title: "Lorem Ipsum After HD should be here",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "bunny.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait4.mp4"
-  },
-  {
     title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
+    poster: "http://lorempixel.com/300/500/animals?sdd",
     videoSrc: "portrait.mp4"
   },
   {
     title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
+    poster: "http://lorempixel.com/300/500/animals?xcc",
     videoSrc: "portrait2.mp4"
   },
   {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait3.mp4"
-  },
-  {
     title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait3.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait3.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
+    poster: "http://lorempixel.com/300/500/animals?sdww",
     videoSrc: "portrait2.mp4"
   },
   {
@@ -63,7 +28,6 @@ const items = [
 
 class Recent extends Component {
   render(){
-    console.log("shit", items)
     return (
         <div>
           <Filters />

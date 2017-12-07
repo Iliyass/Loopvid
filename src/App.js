@@ -6,9 +6,18 @@ import Card from './components/Card';
 import Mobile from './containers/Mobile';
 import Recent from './containers/Recent';
 import Categories from './containers/Categories';
+import Trending from './containers/Trending';
+import SingleCategory from './containers/SingleCategory';
 import { Router, Route, Link } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory'
 const history = createHistory()
+
+const NoMatch = ({ location }) => (
+  <div>
+    <h3>No match for <code>{location.pathname}</code></h3>
+  </div>
+)
+
 
 class App extends Component {
   render() {
@@ -16,7 +25,10 @@ class App extends Component {
           <Router history={history}>
             <Mobile history={history}>
                 <Route exact={true} path="/" component={Recent} />
+                <Route exact={true} path="/trending" component={Trending} />
                 <Route exact={true} path="/categories" component={Categories} />
+                <Route exact={true} path="/categories/:category" component={SingleCategory} />
+                <Route component={NoMatch}/>
             </Mobile>
           </Router>
     );

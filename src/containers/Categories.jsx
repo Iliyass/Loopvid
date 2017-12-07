@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import ButtonBase from 'material-ui/ButtonBase';
@@ -107,47 +107,57 @@ const images = [
   },
 ];
 
-function ButtonBases(props) {
-  const { classes } = props;
-
-  return (
-    <div className={classes.root}>
-      {images.map(image => (
-        <ButtonBase
-          focusRipple
-          key={image.title}
-          className={classes.image}
-          style={{
-            width: image.width,
-            minHeight: 180
-          }}
-        >
-          <div
-            className={classes.imageSrc}
-            style={{
-              backgroundImage: `url(${image.url})`,
-            }}
-          />
-          <div className={classes.imageBackdrop} />
-          <div className={classes.imageButton}>
-            <Typography
-              component="h3"
-              type="subheading"
-              color="inherit"
-              className={classes.imageTitle}
+class Categories extends Component{
+  constructor(props) {
+    super(props)
+    this.handleCategoryClick = this.handleCategoryClick.bind(this)
+  }
+  handleCategoryClick(cat){
+    this.props.history.push(`/categories/${cat.title}`)
+  }
+  render(){
+    const { classes } = this.props;
+    
+      return (
+        <div className={classes.root}>
+          {images.map(image => (
+            <ButtonBase
+              onClick={() => this.handleCategoryClick(image)}
+              focusRipple
+              key={image.title}
+              className={classes.image}
+              style={{
+                width: image.width,
+                minHeight: 180
+              }}
             >
-              {image.title}
-              <div className={classes.imageMarked} />
-            </Typography>
-          </div>
-        </ButtonBase>
-      ))}
-    </div>
-  );
+              <div
+                className={classes.imageSrc}
+                style={{
+                  backgroundImage: `url(${image.url})`,
+                }}
+              />
+              <div className={classes.imageBackdrop} />
+              <div className={classes.imageButton}>
+                <Typography
+                  component="h3"
+                  type="subheading"
+                  color="inherit"
+                  className={classes.imageTitle}
+                >
+                  {image.title}
+                  <div className={classes.imageMarked} />
+                </Typography>
+              </div>
+            </ButtonBase>
+          ))}
+        </div>
+      ); 
+  }
 }
 
-ButtonBases.propTypes = {
+Categories.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ButtonBases);
+export default withStyles(styles)(Categories);

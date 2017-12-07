@@ -18,6 +18,8 @@ import HomeIcon from 'material-ui-icons/Home';
 import SearchIcon from 'material-ui-icons/Search';
 import StarRate from 'material-ui-icons/Star';
 import Subscriptions from 'material-ui-icons/Subscriptions';
+import Whatshot from 'material-ui-icons/Whatshot';
+import ArrowBack from 'material-ui-icons/ArrowBack';
 
 import Autocomplete from '../components/Autocomplete';
 import Paper from 'material-ui/Paper';
@@ -34,19 +36,14 @@ const stylesNav = {
 
 const navRoutes = {
   recents:{
-    label: "Recents",
+    label: "Home",
     path: "/",
-    component: <RestoreIcon />
+    component: <HomeIcon />
   },
-  featured: {
-    label: "Featured",
-    path: "/featured",
-    component: <StarRate />
-  },
-  search: {
-    label: "Search",
-    path: "/search",
-    component: <SearchIcon />
+  trending: {
+    label: "Trending",
+    path: "/trending",
+    component: <Whatshot />
   },
   categories: {
     label: "Categories",
@@ -65,7 +62,7 @@ class LabelBottomNavigation extends React.Component {
 
   getCurrentBotton(){
     const activePath = this.props.activePath || "/"
-    const routerFiltered = Object.keys(navRoutes).filter(r => navRoutes[r].path === activePath)
+    const routerFiltered = Object.keys(navRoutes).filter(r => activePath.lastIndexOf(navRoutes[r].path) === 0)
     return routerFiltered.length ? routerFiltered[0] : 'recents'
   }
   handleChange = (event, value) => {
@@ -78,7 +75,7 @@ class LabelBottomNavigation extends React.Component {
     const { value } = this.state;
 
     return (
-      <BottomNavigation value={value} onChange={this.handleChange} className={classes.root}>
+      <BottomNavigation showLabels value={value} onChange={this.handleChange} className={classes.root}>
         {
           Object.keys(navRoutes)
               .map(route => ({...navRoutes[route], value: route}))
@@ -120,11 +117,11 @@ constructor(props){
   super(props)
   this.handleNavigate = this.handleNavigate.bind(this)
   this.state = {
-    searchMode: false
+    searchMode: false,
+    nestedRoute: false
   }
 }
 handleNavigate(routeValue){
-  console.log("routeValue", routeValue)
   this.props.history.push(`${routeValue}`)
 }
 renderSearchBar(){
@@ -133,20 +130,22 @@ renderSearchBar(){
       <Autocomplete onSearch={this.handleSearch} />
   )
 }
-render() {
-  // <Button color="contrast">Login</Button>
-  
+render() {  
   const { classes } = this.props;
-  console.log("this.props", this.props)
   return (
     <div className={classes.root}>
       <AppBar position="fixed">
         <Toolbar>
           { ! this.state.searchMode ? [
-              <IconButton className={classes.menuButton} color="contrast" aria-label="Menu">
-                <MenuIcon />
-              </IconButton>,
-              <Typography type="title" color="inherit" className={classes.flex}>
+              this.state.nestedRoute ? 
+                <IconButton key={"menu-1"} className={classes.menuButton} color="contrast" aria-label="Menu">
+                  <ArrowBack />
+                </IconButton>
+                : <IconButton key={"menu-2"} className={classes.menuButton} color="contrast" aria-label="Menu">
+                  <MenuIcon />
+                </IconButton>
+              ,
+              <Typography key={"logo-1"} type="title" color="inherit" className={classes.flex}>
                 Loopvid
               </Typography>
             ] : this.renderSearchBar()
