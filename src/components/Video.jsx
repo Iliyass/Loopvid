@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent, Component } from 'react';
 import { Player, ControlBar, PlayToggle, BigPlayButton, 
          ProgressControl, VolumeMenuButton, FullscreenToggle,
          CurrentTimeDisplay, DurationDisplay } from 'video-react';
@@ -14,7 +14,7 @@ const PlayButton = ({ onClick }) => (
     </div>
   </div>
 )
-export default class Video extends Component {
+export default class Video extends PureComponent {
   constructor(props){
     super(props)
     this.state = {
@@ -35,27 +35,6 @@ export default class Video extends Component {
   componentDidMount() {
     // subscribe state change
     this.refs.player.subscribeToStateChange(this.handleStateChange.bind(this));
-    this._width = this.refs.player.video.video.style.width
-    
-    return;
-
-    // const hammeredVideo = new Hammer(this.refs.player.video.video);
-    // hammeredVideo.on('panleft', (ev) => {
-    //   console.log("panleft", `${ this._previousDelta || 0 + ev.deltaX}px`, this._previousDelta, ev.deltaX)    
-    //   let valueToLeft = 0;
-    //   if(this._previousDelta && this._previousDelta < ev.deltaX){
-    //     this._previousDelta = (this._previousDelta + Math.abs(ev.deltaX)) * -1
-    //   }
-    //   this._previousDelta = (this._previousDelta + Math.abs(ev.deltaX)) * -1
-      
-    //   this.refs.player.video.video.style.left = `${this._previousDelta}px`
-    // })
-
-    // hammeredVideo.on('panright', (ev) => {
-    //   console.log("panright", `${this._previousDelta || 0 - Math.abs(ev.deltaX)}px`)
-    //   this.refs.player.video.video.style.left = `${this._previousDelta || 0 - Math.abs(ev.deltaX)}px`
-      
-    // })
   }
   handleStateChange(state, prevState) {
     // copy player state to this component's state

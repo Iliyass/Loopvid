@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Listing from '../components/Listing';
 import Filters from '../components/Filters';
+import { withStyles } from 'material-ui/styles';
 
 const items = [
   {
@@ -26,15 +27,18 @@ const items = [
   },
 ]
 
+const styles = theme => ({
+
+});
 class Recent extends Component {
   render(){
+    const { classes } = this.props
     return (
         <div>
-          <Filters />
           <Listing items={items} />          
         </div>
     )
   }
 }
 
-export default Recent
+export default withStyles(styles)(Recent)

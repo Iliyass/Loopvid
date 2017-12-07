@@ -24,6 +24,9 @@ import ArrowBack from 'material-ui-icons/ArrowBack';
 import Autocomplete from '../components/Autocomplete';
 import Paper from 'material-ui/Paper';
 
+import Filters from '../components/Filters';
+import FilterListIcon from 'material-ui-icons/FilterList';
+
 
 const stylesNav = {
   root: {
@@ -110,15 +113,25 @@ const styles = theme => ({
     paddingLeft: 5,
     paddingRight: 5,
     flex: 1
-  }
+  },
+  button: {
+    margin: theme.spacing.unit,
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
 });
-class ButtonAppBar extends React.Component {
+class ButtonAppBar extends React.PureComponent {
 constructor(props){
   super(props)
   this.handleNavigate = this.handleNavigate.bind(this)
   this.state = {
     searchMode: false,
-    nestedRoute: false
+    nestedRoute: false,
+    filtersOpen: false
   }
 }
 handleNavigate(routeValue){
@@ -150,12 +163,21 @@ render() {
               </Typography>
             ] : this.renderSearchBar()
           }
+
+          { this.state.searchMode &&
+            <IconButton color="contrast" onClick={e => this.setState({ filtersOpen: !this.state.filtersOpen })}>
+                <FilterListIcon className={classes.leftIcon}/>
+            </IconButton>
+          }
           <IconButton onClick={e => this.setState({ searchMode: !this.state.searchMode })} color="contrast">
             <SearchIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
       <div style={{ marginTop: "13%" }} >
+        { this.state.filtersOpen &&
+          <Filters />
+        }
         {this.props.children}
         <LabelBottomNavigationStyled activePath={this.props.history.location.pathname} onNavigate={this.handleNavigate} />        
       </div>
