@@ -1,0 +1,34 @@
+version: '3'
+
+networks:
+    loopvid:
+        driver: bridge
+        
+services:
+  db:
+    networks: 
+      - loopvid
+    image: mongo:3.2
+    ports:
+        - "27017:27017"
+    volumes:
+      - ./db_data:/data/db
+
+  backend:
+    build: ./backend
+    restart: always
+    depends_on:
+      - db
+    networks: 
+      - loopvid
+    volumes:
+      - ./backend:/code
+    ports:
+      - "9830:8000"
+    command: python3 manage.py runserver 0.0.0.0:8000
+    environment:
+      - DEBUG=True
+      - MONGODB_PORT=27017
+      - MONGODB_SERVER=db
+      - MONGODB_DB=loopvid
+
