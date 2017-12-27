@@ -1,5 +1,8 @@
-from mongoengine import *
+from mongoengine import fields, Document
 
 
-class Videos(DynamicDocument):
-  url = StringField()
+class Videos(Document):
+  url = fields.URLField()
+  title = fields.StringField()
+  desc = fields.StringField()
+  thumbnail = fields.URLField()

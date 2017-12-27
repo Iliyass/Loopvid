@@ -4,5 +4,6 @@ from .serializer import VideosSerializer
 
 
 class VideosViewSet(ModelViewSet):
+    lookup_field = 'id'
     serializer_class = VideosSerializer
     queryset = Videos.objects.all()

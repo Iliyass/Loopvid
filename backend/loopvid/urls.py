@@ -14,22 +14,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
-from django.conf.urls import url
+from django.conf.urls import url, include
 from rest_framework_mongoengine.routers import DefaultRouter
 
 from loopvid.videos.views import VideosViewSet
 
 
 router = DefaultRouter()
-router.register(r'^videos', VideosViewSet, base_name='videos_view_set')
+router.register('videos', VideosViewSet, base_name='videos_view_set')
 
-urlpatterns = [
-    url(r'^api/', include('rest_framework.urls', namespace='rest_framework'))
-]
-
-urlpatterns += router.urls
-
-
-
-
+urlpatterns = router.urls
