@@ -27,7 +27,11 @@ const dbVideos = _.times(100).map(randomVideo);
 const resolvers = {
   ...customTypes,
   Query: {
-    videos(root, { page, pageSize = 10, filter = { resolution, duration }, sort }) {
+    video(root_, args){
+      const { id } = args
+      return _.find(dbVideos, { id })
+    },
+    videos(root, { page, pageSize = 10, filter = { resolution, duration }, sort = { UploadDate, ViewCount } }) {
       const { resolution, duration } = filter
       const { UploadDate, ViewCount } = sort
       let videos = dbVideos
