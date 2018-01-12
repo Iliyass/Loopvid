@@ -17,14 +17,24 @@ const typeDefs = `
     ViewCount: Boolean
     Rating: Boolean
   }
+
   type Query {
-    videos(page: Int = 1, pageSize: Int = 10, filter: Filter, sort: Sort): [Video]!
+    videos(page: Int = 0, pageSize: Int = 10, filter: Filter, sort: Sort): [Video]!
     video(id: ID!): Video!
+    user(id: ID!): User!
+    users: [User]!
   }
+
+  type Mutation {
+    login(email: String!, password: String!): User
+    signup(email: String!, password: String!, fullName: String!): User
+  }
+
   enum Resolutions {
     SD
     HD
   }
+
   type Video {
     id: ID!
     title: String!
@@ -38,6 +48,15 @@ const typeDefs = `
     minuteLength: Int
     created_at: Date
     published_at: Date
+    user: User!
+  }
+
+  type User {
+    id: ID!
+    fullName: String!
+    email: String!
+    avatar: String
+    isActive: Boolean
   }
 `;
 

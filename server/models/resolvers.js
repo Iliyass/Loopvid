@@ -4,6 +4,17 @@ import _ from 'lodash';
 
 const RESOLUTIONS = ['SD', 'HD']
 const DURATION  = ['SHORT', 'LONG']
+const randomUser = function randomUser(){
+  return {
+    id: casual.uuid,
+    fullName: casual.full_name,
+    password: casual.password,
+    email: casual.email,
+    avatar: `http://lorempixel.com/${_.random(340, 350)}/${_.random(340, 350)}/`
+  }
+}
+
+const dbUsers = _.times(10).map(randomUser);
 
 const randomVideo = function randomVideo(){
   return {
@@ -18,16 +29,42 @@ const randomVideo = function randomVideo(){
     isPublished: Boolean(_.random(0.5, 1)),
     minuteLength: _.random(2, 45),
     created_at: new Date(_.random(1325376000000, 1515139989055)),
-    published_at: new Date(_.random(1325376000000, 1515139989055))
+    published_at: new Date(_.random(1325376000000, 1515139989055)),
+    user_id: dbUsers[_.random(0, dbUsers.length - 1)].id
   }
 }
 
-const dbVideos = _.times(100).map(randomVideo);
+const dbVideos = _.times(10).map(randomVideo);
 
 const resolvers = {
   ...customTypes,
+  Mutation: {
+    login(root, { email, password }){
+      return _.find(dbUsers, { email, password })
+    },
+    signup(root, { email, password, fullName }){
+      dbUsers.push({ id: casual.uuid, email, password, fullName })
+      return _.last(dbUsers)
+    }
+  },
+  Video: {
+    user: (video) => {
+      return _.find(dbUsers, { id: video.user_id })
+    }
+  },
+  User: {
+    fullName: (user) => {
+      return `My Fucking Full name is ${user.fullName}`
+    }
+  },
   Query: {
-    video(root_, args){
+    user(root, { id }){
+      return _.find(dbUsers, { id })
+    },
+    users(root, { }){
+      return dbUsers
+    },
+    video(root, args){
       const { id } = args
       return _.find(dbVideos, { id })
     },
@@ -49,7 +86,7 @@ const resolvers = {
         videos = _.sortBy(videos, [ 'viewCount' ], [ ViewCount ? 'desc' : 'asc' ] )
       }
       
-      videos = _(videos).slice(page * pageSize).take(pageSize)
+      videos = _.take(_.slice(videos, page * pageSize), pageSize)
 
       return videos
     }
