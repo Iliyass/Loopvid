@@ -67,15 +67,51 @@ class Filters extends Component {
     super(props)
     this.handleFilterClick = this.handleFilterClick.bind(this)
     // TODO: Set filters status from props
+    console.log("props", props)
+    const { selectedValues } = props
     this.state = {
-      filters
+      filters: {
+        ...filters,
+        resolution: {
+          ...filters.resolution,
+          selectedValue: props.selectedValues.resolution || 'all'
+        },
+        sort: {
+          ...filters.sort,
+          selectedValue: props.selectedValues.sort || "revelence"
+        },
+        duration: {
+          ...filters.duration,
+          selectedValue: props.selectedValues.duration
+        },
+      }
     }
+  }
+  componentWillReceiveProps(nextProps){
+    this.setState({
+      filters: {
+        ...filters,
+        resolution: {
+          ...filters.resolution,
+          selectedValue: nextProps.selectedValues.resolution || 'all'
+        },
+        sort: {
+          ...filters.sort,
+          selectedValue: nextProps.selectedValues.sort || "revelence"
+        },
+        duration: {
+          ...filters.duration,
+          selectedValue: nextProps.selectedValues.duration
+        },
+      }
+    })
   }
   handleFilterClick({ filter, value }){
     this.setState({ filters: {...this.state.filters, [filter]: {...this.state.filters[filter], selectedValue: (this.state.filters[filter].selectedValue !== value) ? value : null } } })
   }
   render(){
-    const { classes } = this.props
+    const { classes, onChange } = this.props
+    console.log("onChange", onChange)
     const { filters } = this.state
     return (
         <Grid container className={classes.demo} justify="space-around" spacing={Number(23)}>
@@ -88,7 +124,7 @@ class Filters extends Component {
                   <Grid alignItems="flex-start" direction="column" key={i} container>
                     {
                       filters[f].values.map(v => (  
-                        <Button dense onClick={() => this.handleFilterClick({ filter: f, value: v.value})}  
+                        <Button dense onClick={() => { onChange({ filter: f, value: v.value}) }}  
                                       raised={filters[f].selectedValue === v.value}  
                                       className={classes.button}>{v.label}</Button>   
                       ))
@@ -102,8 +138,7 @@ class Filters extends Component {
   }
 }
 Filters.propTypes = {
-  classes: PropTypes.object.isRequired,
-
+  classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(Filters);

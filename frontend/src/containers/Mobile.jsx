@@ -150,7 +150,8 @@ renderSearchBar(){
 }
 render() {  
   const { classes } = this.props;
-  const { data: { stateUI: { searchMode, searchFiltersOpen } }, updateStateUI } = this.props
+  const { data: { stateUI: { searchMode, searchFiltersOpen, filtersResolution, filtersSort, 
+    filtersDuration } }, updateStateUI } = this.props
   console.log("Mobile Props", this.props)
   console.log("searchFiltersOpen", searchMode, searchFiltersOpen)
   return (
@@ -185,7 +186,12 @@ render() {
       </AppBar>
       <div style={{ marginTop: "13%" }} >
         { searchFiltersOpen &&
-          <Filters />
+          <Filters onChange={({ filter, value }) => { 
+                      const map = { resolution: 'filtersResolution', 
+                      sort: 'filtersSort', duration: 'filtersDuration' }
+                      updateStateUI(map[filter], value ) 
+                    }} 
+                   selectedValues={{ resolution: filtersResolution, sort: filtersSort, duration: filtersDuration }} />
         }
         {this.props.children}
         <LabelBottomNavigationStyled activePath={this.props.history.location.pathname} onNavigate={this.handleNavigate} />        
@@ -203,9 +209,9 @@ const q__GET_SEARCH_STATE = gql`
     stateUI @client{
       searchMode
       searchTerm
-      searchResolution
-      searchSort
-      searchDuration
+      filtersResolution
+      filtersSort
+      filtersDuration
       searchFiltersOpen
     }
   }`

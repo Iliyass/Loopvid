@@ -12,9 +12,9 @@ const INITIAL_STATE = {
     __typename: 'stateUI',
     searchMode: false,
     searchTerm: null,
-    searchResolution: null,
-    searchSort: null,
-    searchDuration: null,
+    filtersResolution: null,
+    filtersSort: null,
+    filtersDuration: null,
     searchFiltersOpen: false
   }
 }
@@ -29,15 +29,15 @@ const stateLink = withClientState({
             stateUI @client {
               searchMode
               searchTerm
-              searchResolution
-              searchSort
-              searchDuration
+              filtersResolution
+              filtersSort
+              filtersDuration
               searchFiltersOpen
             }
           }
         `;
         const previousState = cache.readQuery({ query });
-
+        console.log('updateUI', { key, value })
         const data = {
           ...previousState,
           stateUI: {
