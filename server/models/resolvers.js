@@ -16,11 +16,14 @@ const randomUser = function randomUser(){
 
 const dbUsers = _.times(10).map(randomUser);
 
+const videoSRC = [ "portrait.mp4", "portrait2.mp4","portrait3.mp4"]
+
 const randomVideo = function randomVideo(){
   return {
     id: casual.uuid,
     title: casual.title,
     desc: casual.description,
+    src: videoSRC[_.random(0, 2)],    
     resolution: RESOLUTIONS[_.random(0, 1)],
     upvotes: _.random(1, 1000),
     downvotes: _.random(1, 1000),
@@ -48,6 +51,7 @@ const resolvers = {
     }
   },
   Video: {
+    src: (video) => `http://localhost:3000/${video.src}`,
     user: (video) => {
       return _.find(dbUsers, { id: video.user_id })
     }

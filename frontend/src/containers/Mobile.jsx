@@ -29,6 +29,8 @@ import FilterListIcon from 'material-ui-icons/FilterList';
 
 import Sidebar from '../components/Sidebar';
 
+import { graphql, compose } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const stylesNav = {
   root: {
@@ -133,7 +135,7 @@ constructor(props){
   this.state = {
     searchMode: false,
     nestedRoute: false,
-    filtersOpen: false,
+    searchFiltersOpen: false,
     sidebarOpen: false
   }
 }
@@ -148,12 +150,15 @@ renderSearchBar(){
 }
 render() {  
   const { classes } = this.props;
+  const { data: { stateUI: { searchMode, searchFiltersOpen } }, updateStateUI } = this.props
+  console.log("Mobile Props", this.props)
+  console.log("searchFiltersOpen", searchMode, searchFiltersOpen)
   return (
     <div className={classes.root}>
       <Sidebar open={this.state.sidebarOpen} onClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} onRequestClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} />
       <AppBar position="fixed">
         <Toolbar>
-          { ! this.state.searchMode ? [
+          { ! searchMode ? [
               this.state.nestedRoute ? 
                 <IconButton key={"menu-1"} className={classes.menuButton} color="contrast" aria-label="Menu">
                   <ArrowBack />
@@ -168,18 +173,18 @@ render() {
             ] : this.renderSearchBar()
           }
 
-          { this.state.searchMode &&
-            <IconButton color="contrast" onClick={e => this.setState({ filtersOpen: !this.state.filtersOpen })}>
+          { searchMode &&
+            <IconButton color="contrast" onClick={e => updateStateUI('searchFiltersOpen', !searchFiltersOpen)}>
                 <FilterListIcon className={classes.leftIcon}/>
             </IconButton>
           }
-          <IconButton onClick={e => this.setState({ searchMode: !this.state.searchMode })} color="contrast">
+          <IconButton onClick={e => updateStateUI('searchMode', !searchMode)} color="contrast">
             <SearchIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
       <div style={{ marginTop: "13%" }} >
-        { this.state.filtersOpen &&
+        { searchFiltersOpen &&
           <Filters />
         }
         {this.props.children}
@@ -193,5 +198,26 @@ render() {
 ButtonAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
-export default withStyles(styles)(ButtonAppBar);
+const q__GET_SEARCH_STATE = gql`
+  query getState {
+    stateUI @client{
+      searchMode
+      searchTerm
+      searchResolution
+      searchSort
+      searchDuration
+      searchFiltersOpen
+    }
+  }`
+const m__UPDATE_STATE = gql`
+  mutation updateStateIU($key: String!, $value: String!) {
+    updateUI(key: $key, value: $value) @client
+  }
+`
+export default withStyles(styles)(compose(
+  graphql(q__GET_SEARCH_STATE),
+  graphql(m__UPDATE_STATE, {
+  props: ({ mutate }) => ({
+    updateStateUI : (key, value) => mutate({ variables: { key, value} })
+  })
+}))(ButtonAppBar));

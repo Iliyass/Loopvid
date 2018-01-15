@@ -65,31 +65,31 @@ class LVCard extends Component {
 
   }
   render() {
-    const { classes, isVisible, title, poster, videoSrc } = this.props;
+    const { classes, isVisible, title, thumbnail, upvotes, downvotes, published_at, src, user } = this.props;
     return (
       <Card className={classes.card}>
         <CardHeader
           avatar={
-            <Avatar aria-label="Recipe" className={classes.avatar}>
-              R
-                </Avatar>
+            <Avatar src={user.avatar} aria-label="Recipe" className={classes.avatar}>
+              
+            </Avatar>
           }
           action={
             <CardMenu />
           }
           title={title}
-          subheader="September 14, 2016"
+          subheader={published_at}
         />
-        <Video poster={poster} videoSrc={videoSrc} isVisible={isVisible} />
+        <Video poster={thumbnail} videoSrc={src} isVisible={isVisible} />
         <CardActions >
           <div className={classes.controls}>
             <IconButton className={classes.likeButton}>
               <ThumbUp />
-              <Typography className={classes.iconButton} >233K</Typography>
+              <Typography className={classes.iconButton} >{upvotes}</Typography>
             </IconButton>
             <IconButton>
               <ThumbDown />
-              <Typography className={classes.iconButton} >23</Typography>
+              <Typography className={classes.iconButton} >{downvotes}</Typography>
             </IconButton>
           </div>
           <div className={classes.flexGrow} />

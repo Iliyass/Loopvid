@@ -38,6 +38,7 @@ const typeDefs = `
   type Video {
     id: ID!
     title: String!
+    src: String!
     desc: String!
     upvotes: Int!
     downvotes: Int!

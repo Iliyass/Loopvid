@@ -10,6 +10,9 @@ import Trending from './containers/Trending';
 import SingleCategory from './containers/SingleCategory';
 import { Router, Route, Link } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory'
+import GraphQLClient from './apollo/client';
+import { ApolloProvider } from 'react-apollo';
+
 const history = createHistory()
 
 const NoMatch = ({ location }) => (
@@ -22,6 +25,7 @@ const NoMatch = ({ location }) => (
 class App extends Component {
   render() {
     return (
+      <ApolloProvider client={GraphQLClient}>
           <Router history={history}>
             <Mobile history={history}>
                 <Route exact={true} path="/" component={Recent} />
@@ -31,6 +35,7 @@ class App extends Component {
                 <Route component={NoMatch}/>
             </Mobile>
           </Router>
+          </ApolloProvider>
     );
   }
 }

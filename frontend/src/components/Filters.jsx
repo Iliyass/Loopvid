@@ -66,6 +66,7 @@ class Filters extends Component {
   constructor(props){
     super(props)
     this.handleFilterClick = this.handleFilterClick.bind(this)
+    // TODO: Set filters status from props
     this.state = {
       filters
     }
