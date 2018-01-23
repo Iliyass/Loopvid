@@ -21,13 +21,16 @@ const typeDefs = `
   type Query {
     videos(page: Int = 0, pageSize: Int = 10, filter: Filter, sort: Sort): [Video]!
     video(id: ID!): Video!
-    user(id: ID!): User!
-    users: [User]!
   }
 
   type Mutation {
     login(email: String!, password: String!): User
     signup(email: String!, password: String!, fullName: String!): User
+    
+    like(videoId: ID!): Video
+    dislike(videoId: ID!): Video
+
+    watch(videoId: ID!): Video
   }
 
   enum Resolutions {
@@ -51,13 +54,17 @@ const typeDefs = `
     published_at: Date
     user: User!
   }
-
+  type Like {
+    ObjectID: ID!
+  }
   type User {
     id: ID!
     fullName: String!
     email: String!
     avatar: String
     isActive: Boolean
+    dislikes: [ID!]
+    likes: [ID!]
   }
 `;
 

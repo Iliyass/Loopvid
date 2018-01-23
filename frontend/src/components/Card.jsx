@@ -17,6 +17,10 @@ import MoreVertIcon from 'material-ui-icons/MoreVert';
 import Video from './Video';
 import classnames from 'classnames';
 import CardMenu from './CardMenu';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
+import { compose } from 'react-apollo';
+import moment from 'moment';
 
 const styles = theme => ({
   root: {
@@ -60,12 +64,24 @@ class LVCard extends Component {
 
     }
     this.handleCardMenuClick = this.handleCardMenuClick.bind(this)
+    this.handleThumbup = this.handleThumbup.bind(this)
+    this.handleThumbdown = this.handleThumbdown.bind(this)
   }
   handleCardMenuClick(){
 
   }
+  handleThumbdown(){
+    const { id } = this.props
+    this.props.mutateThumbup();
+  }
+  handleThumbup(){
+    const { id } = this.props
+    this.props.mutateThumbup();
+  }
   render() {
-    const { classes, isVisible, title, thumbnail, upvotes, downvotes, published_at, src, user } = this.props;
+    const { classes, _id, isVisible, title, thumbnail, 
+            upvotes, downvotes, published_at, src, user,
+            mutateThumbup, mutateThumbdown } = this.props;
     return (
       <Card className={classes.card}>
         <CardHeader
@@ -78,16 +94,16 @@ class LVCard extends Component {
             <CardMenu />
           }
           title={title}
-          subheader={published_at}
+          subheader={moment(published_at).format("YYYY-MM-DD")}
         />
         <Video poster={thumbnail} videoSrc={src} isVisible={isVisible} />
         <CardActions >
           <div className={classes.controls}>
-            <IconButton className={classes.likeButton}>
+            <IconButton onClick={mutateThumbup} className={classes.likeButton}>
               <ThumbUp />
               <Typography className={classes.iconButton} >{upvotes}</Typography>
             </IconButton>
-            <IconButton>
+            <IconButton onClick={mutateThumbdown}>
               <ThumbDown />
               <Typography className={classes.iconButton} >{downvotes}</Typography>
             </IconButton>
@@ -107,4 +123,45 @@ LVCard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(LVCard);
+const mutationLike = gql`
+  mutation like($videoId: ID!) {
+    like(videoId: $videoId){
+      id
+      upvotes
+    }
+  }
+`
+const mutationDislike = gql`
+  mutation dislike($videoId: ID!) {
+    dislike(videoId: $videoId){
+      id
+      downvotes
+    }
+}
+`
+
+export default withStyles(styles)(compose ( 
+  graphql(mutationLike, { 
+    name: 'mutateThumbup',
+    options: (props) => ({
+       variables: { videoId: props.id } ,
+       update: (proxy, { data }) => {
+         console.log("update", data.like)
+         return {
+            ...data.like
+         }
+       }
+    })
+  }),
+  graphql(mutationDislike, { 
+    name: 'mutateThumbdown',
+    options: (props) => ({
+      variables: { videoId: props.id },
+      update: (proxy, { data }) => {
+        return {
+           ...data.dislike
+        }
+      }
+   })
+  })
+)(LVCard));

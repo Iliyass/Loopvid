@@ -1,29 +1,32 @@
 import customTypes from '../customTypes';
 import casual from 'casual';
 import _ from 'lodash';
+import Video from '../modules/videos/schema';
+import User from '../modules/users/schema';
 
-const RESOLUTIONS = ['SD', 'HD']
-const DURATION  = ['SHORT', 'LONG']
-const randomUser = function randomUser(){
+const RESOLUTIONS = ['SD', 'HD'];
+const DURATION = ['SHORT', 'LONG'];
+const randomUser = function randomUser() {
   return {
-    id: casual.uuid,
     fullName: casual.full_name,
     password: casual.password,
     email: casual.email,
-    avatar: `http://lorempixel.com/${_.random(340, 350)}/${_.random(340, 350)}/`
-  }
-}
+    avatar: `http://lorempixel.com/${_.random(340, 350)}/${_.random(340, 350)}/`,
+  };
+};
+const videoSRC = ['portrait.mp4', 'portrait2.mp4', 'portrait3.mp4'];
 
-const dbUsers = _.times(10).map(randomUser);
+// const dbUsers = _.times(10).map(randomUser);
 
-const videoSRC = [ "portrait.mp4", "portrait2.mp4","portrait3.mp4"]
 
-const randomVideo = function randomVideo(){
+const randomVideo = function randomVideo(users) {
+  const user_id = users[_.random(0, 9)]._id;
+
   return {
-    id: casual.uuid,
+    // id: casual.uuid,
     title: casual.title,
     desc: casual.description,
-    src: videoSRC[_.random(0, 2)],    
+    src: videoSRC[_.random(0, 2)],
     resolution: RESOLUTIONS[_.random(0, 1)],
     upvotes: _.random(1, 1000),
     downvotes: _.random(1, 1000),
@@ -33,68 +36,113 @@ const randomVideo = function randomVideo(){
     minuteLength: _.random(2, 45),
     created_at: new Date(_.random(1325376000000, 1515139989055)),
     published_at: new Date(_.random(1325376000000, 1515139989055)),
-    user_id: dbUsers[_.random(0, dbUsers.length - 1)].id
-  }
-}
+    user_id,
+  };
+};
 
-const dbVideos = _.times(10).map(randomVideo);
+// Promise.all(
+//   _.times(10)
+//     .map(randomUser)
+//     .map(async u => await User.Model.create(u)))
+//     .then(users => {
+//       _.times(200).map(p => Video.Model.create(randomVideo(users)))
+//     });
+
+// const dbVideos = _.times(1).map( v => {
+//   randomVideo().then(vid => Video.Model.create(vid) )
+// })
+
 
 const resolvers = {
   ...customTypes,
   Mutation: {
-    login(root, { email, password }){
-      return _.find(dbUsers, { email, password })
+    login(root, { email, password }) {
+      return _.find(dbUsers, { email, password });
     },
-    signup(root, { email, password, fullName }){
-      dbUsers.push({ id: casual.uuid, email, password, fullName })
-      return _.last(dbUsers)
-    }
+    signup(root, { email, password, fullName }) {
+      dbUsers.push({
+        id: casual.uuid, email, password, fullName,
+      });
+      return _.last(dbUsers);
+    },
+    async watch(root, { videoId }, context) {
+      const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { viewCount: 1 } }).exec();
+      return video;
+    },
+    async like(root, { videoId }, context) {
+      const { user } = context;
+      const { nModified } = await user.update({ $addToSet: { likes: [videoId] } }).exec();
+
+      if (nModified) {
+        const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { upvotes: 1 } }).exec();
+        return video;
+      }
+      return null;
+    },
+    async dislike(root, { videoId }, context) {
+      const { user } = context;
+      const { nModified } = await user.update({ $addToSet: { dislikes: [videoId] } }).exec();
+
+      if (nModified) {
+        const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { downvotes: 1 } }).exec();
+        return video;
+      }
+      return null;
+    },
   },
   Video: {
-    src: (video) => `http://localhost:3000/${video.src}`,
-    user: (video) => {
-      return _.find(dbUsers, { id: video.user_id })
-    }
-  },
-  User: {
-    fullName: (user) => {
-      return `My Fucking Full name is ${user.fullName}`
-    }
+    src: video => `http://localhost:3000/${video.src}`,
+
+    user: async ({ user_id }) => User.Model.findOne({ _id: user_id }).exec(),
   },
   Query: {
-    user(root, { id }){
-      return _.find(dbUsers, { id })
+    async video(root, args, context) {
+      const { id } = args;
+      return await context.Video.findById(id).exec();
     },
-    users(root, { }){
-      return dbUsers
-    },
-    video(root, args){
-      const { id } = args
-      return _.find(dbVideos, { id })
-    },
-    videos(root, { page, pageSize = 10, filter = { resolution, duration }, sort = { UploadDate, ViewCount } }) {
-      const { resolution, duration } = filter
-      const { UploadDate, ViewCount } = sort
-      let videos = dbVideos
+    videos(root, {
+      page, pageSize = 10, filter = { resolution, duration }, sort = { UploadDate, ViewCount },
+    }, context) {
+      const { resolution, duration } = filter;
+      const { UploadDate, ViewCount } = sort;
+      // let videos = dbVideos
+      let query = {};
+      let qSort = {};
 
-      if(resolution){
-        videos = _.filter(videos, v => v.resolution === resolution)
+      if (resolution) {
+        query = {
+          ...query,
+          resolution,
+        };
       }
-      if(duration){
-        videos = _.filter(videos, v => (duration === "SHORT" && v.minuteLength <= 4) || (duration === "LONG" && v.minuteLength > 20) )
+      const durations = {
+        SHORT: { minuteLength: { $lte: 4 } },
+        LONG: { minuteLength: { $gte: 20 } },
+      };
+      if (duration) {
+        query = {
+          ...query,
+          ...durations[duration],
+        };
       }
-      if(UploadDate !== undefined){
-        videos = _.sortBy(videos, [ 'published_at' ], [ UploadDate ? 'desc' : 'asc' ])
+      if (UploadDate !== undefined) {
+        qSort = {
+          ...qSort,
+          published_at: UploadDate ? -1 : 1,
+        };
       }
-      if(ViewCount  !== undefined){
-        videos = _.sortBy(videos, [ 'viewCount' ], [ ViewCount ? 'desc' : 'asc' ] )
+      if (ViewCount !== undefined) {
+        qSort = {
+          ...qSort,
+          viewCount: ViewCount ? -1 : 1,
+        };
       }
-      
-      videos = _.take(_.slice(videos, page * pageSize), pageSize)
 
-      return videos
-    }
-  }
+
+      return context.Video.find(query).sort(qSort).skip(page * pageSize).limit(pageSize)
+        .exec();
+    },
+  },
 };
 
 export default resolvers;

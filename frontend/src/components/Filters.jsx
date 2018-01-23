@@ -111,7 +111,6 @@ class Filters extends Component {
   }
   render(){
     const { classes, onChange } = this.props
-    console.log("onChange", onChange)
     const { filters } = this.state
     return (
         <Grid container className={classes.demo} justify="space-around" spacing={Number(23)}>
