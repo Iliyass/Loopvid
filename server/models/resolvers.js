@@ -92,7 +92,7 @@ const resolvers = {
     },
   },
   Video: {
-    src: video => `http://${process.env.REACT_APP_HOST}:3000/${video.src}`,
+    src: video => `http://${process.env.REACT_APP_HOST}/${video.src}`,
 
     user: async ({ user_id }) => User.Model.findOne({ _id: user_id }).exec(),
   },

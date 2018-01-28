@@ -57,7 +57,7 @@ const client = new ApolloClient({
   cache,
   link: ApolloLink.from([
     stateLink,
-    new HttpLink({ uri: `http://${process.env.REACT_APP_HOST}:3001/graphql` })
+    new HttpLink({ uri: `http://${process.env.REACT_APP_HOST}/graphql` })
   ])
 });
 
