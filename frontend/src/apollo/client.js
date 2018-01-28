@@ -37,7 +37,6 @@ const stateLink = withClientState({
           }
         `;
         const previousState = cache.readQuery({ query });
-        console.log('updateUI', { key, value })
         const data = {
           ...previousState,
           stateUI: {
@@ -58,7 +57,7 @@ const client = new ApolloClient({
   cache,
   link: ApolloLink.from([
     stateLink,
-    new HttpLink({ uri: 'http://localhost:3001/graphql' })
+    new HttpLink({ uri: `http://${process.env.REACT_APP_HOST}:3001/graphql` })
   ])
 });
 

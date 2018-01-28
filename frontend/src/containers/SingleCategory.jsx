@@ -43,7 +43,6 @@ const items = [
 
 class SingleCategory extends Component {
   componentWillMount(){
-    console.log("Category :", this.props.match.params.category)
   }
   render(){
     return (

@@ -11,7 +11,7 @@ const randomUser = function randomUser() {
     fullName: casual.full_name,
     password: casual.password,
     email: casual.email,
-    avatar: `http://lorempixel.com/${_.random(340, 350)}/${_.random(340, 350)}/`,
+    avatar: `https://picsum.photos/${_.random(340, 350)}/${_.random(340, 350)}/`,
   };
 };
 const videoSRC = ['portrait.mp4', 'portrait2.mp4', 'portrait3.mp4'];
@@ -20,6 +20,7 @@ const videoSRC = ['portrait.mp4', 'portrait2.mp4', 'portrait3.mp4'];
 
 
 const randomVideo = function randomVideo(users) {
+  console.log("users", users)
   const user_id = users[_.random(0, 9)]._id;
 
   return {
@@ -31,7 +32,7 @@ const randomVideo = function randomVideo(users) {
     upvotes: _.random(1, 1000),
     downvotes: _.random(1, 1000),
     viewCount: _.random(12, 12000),
-    thumbnail: `http://lorempixel.com/${_.random(340, 350)}/${_.random(340, 350)}/`,
+    thumbnail: `https://picsum.photos/${_.random(340, 350)}/${_.random(340, 350)}/`,
     isPublished: Boolean(_.random(0.5, 1)),
     minuteLength: _.random(2, 45),
     created_at: new Date(_.random(1325376000000, 1515139989055)),
@@ -91,7 +92,7 @@ const resolvers = {
     },
   },
   Video: {
-    src: video => `http://localhost:3000/${video.src}`,
+    src: video => `http://${process.env.REACT_APP_HOST}:3000/${video.src}`,
 
     user: async ({ user_id }) => User.Model.findOne({ _id: user_id }).exec(),
   },
@@ -100,16 +101,14 @@ const resolvers = {
       const { id } = args;
       return await context.Video.findById(id).exec();
     },
-    videos(root, {
-      page, pageSize = 10, filter = { resolution, duration }, sort = { UploadDate, ViewCount },
-    }, context) {
-      const { resolution, duration } = filter;
-      const { UploadDate, ViewCount } = sort;
+    videos(root, { page, pageSize = 10, ...filterAndSort }, context) {
+      const { resolution = null, duration = null } = filterAndSort.filter || {};
+      const { UploadDate, ViewCount } = filterAndSort.sort || { };
       // let videos = dbVideos
       let query = {};
       let qSort = {};
 
-      if (resolution) {
+      if (resolution && RESOLUTIONS[resolution]) {
         query = {
           ...query,
           resolution,

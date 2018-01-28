@@ -32,7 +32,6 @@ class App extends Component {
                 <Route exact={true} path="/trending" component={Trending} />
                 <Route exact={true} path="/categories" component={Categories} />
                 <Route exact={true} path="/categories/:category" component={SingleCategory} />
-                <Route component={NoMatch}/>
             </Mobile>
           </Router>
           </ApolloProvider>

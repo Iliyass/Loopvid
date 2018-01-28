@@ -1,9 +1,8 @@
-import React, { PureComponent, Component } from 'react';
-import { Player, ControlBar, PlayToggle, BigPlayButton, 
-         ProgressControl, VolumeMenuButton, FullscreenToggle,
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+import { Player, ControlBar, PlayToggle, 
+         ProgressControl, FullscreenToggle,
          CurrentTimeDisplay, DurationDisplay } from 'video-react';
-import screenfull from 'screenfull'
-import Hammer from 'hammerjs'
 import AspectRatio from 'material-ui-icons/AspectRatio';
 import IconButton from 'material-ui/IconButton';
 
@@ -25,6 +24,7 @@ export default class Video extends PureComponent {
     this._previousDelta = 0
   }
   componentWillReceiveProps(props){
+    console.log("isVisible", props.isVisible)
     if(props.isVisible){
       return this.refs.player.play()
     }
@@ -50,31 +50,39 @@ export default class Video extends PureComponent {
   render(){
     return (
       <Player
+        // onMouseDown={() => { 
+        //   TODO: Overide onMouseDown behavior
+        // }}
         preload={"metadata"}
         ref="player"
         poster={this.props.poster}
         muted
-        playsInline
+        // playsInline
         src={this.props.videoSrc}
         aspectRatio="16:9"
       >
-      {! this.state.player.hasStarted && 
+      {/* {! this.state.player.hasStarted && 
         <PlayButton onClick={() => this.refs.player.play()} />
-      }
-        <ControlBar disableDefaultControls={true} >
+      } */}
+        <ControlBar disableDefaultControls={true} autoHide={false} >
           <PlayToggle />
           <CurrentTimeDisplay />
           <ProgressControl />
           <DurationDisplay />
-          <VolumeMenuButton vertical={true} />          
           <FullscreenToggle />
-          { true && 
+          {/* { true && 
                   <button onClick={this.handlePortraitFullscreen}>
                     <AspectRatio />
                   </button>
-          }
+          } */}
         </ControlBar>
       </Player>
     )
   }
+}
+
+Video.propTypes = {
+  isVisible: PropTypes.bool,
+  videoSrc: PropTypes.string.isRequired,
+  poster: PropTypes.string.isRequired
 }

@@ -10,27 +10,27 @@ const filters = {
   resolution: {
     label: "Resolution",
     values: [ 
-      { label: "All", value: "all" },
-      { label: "SD", value: "sd" },
-      { label: "HD", value: "hd" }
+      { label: "All", value: 'all' },
+      { label: "SD", value: "SD" },
+      { label: "HD", value: "HD" }
     ],
-    selectedValue: "all"
+    selectedValue: 'all'
   },
   sort: {
     label: "Sort",
     values: [ 
       { label: "Revelence", value: "revelence" },
-      { label: "Upload date", value: "upload_date" },
-      { label: "View count", value: "view_count" },
-      { label: "Rating", value: "rating" },
+      { label: "Upload date", value: "UploadDate" },
+      { label: "View count", value: "ViewCount" },
+      { label: "Rating", value: "Rating" },
     ],
     selectedValue: "revelence"
   },
   duration: {
     label: "Duration",
     values: [ 
-      { label: "Short (<4 minutes)", value: "short" },
-      { label: "Long (>20 minutes)", value: "long" }
+      { label: "Short (<4 minutes)", value: "SHORT" },
+      { label: "Long (>20 minutes)", value: "LONG" }
     ],
     selectedValue: null
   }
@@ -67,7 +67,6 @@ class Filters extends Component {
     super(props)
     this.handleFilterClick = this.handleFilterClick.bind(this)
     // TODO: Set filters status from props
-    console.log("props", props)
     const { selectedValues } = props
     this.state = {
       filters: {
@@ -107,7 +106,18 @@ class Filters extends Component {
     })
   }
   handleFilterClick({ filter, value }){
-    this.setState({ filters: {...this.state.filters, [filter]: {...this.state.filters[filter], selectedValue: (this.state.filters[filter].selectedValue !== value) ? value : null } } })
+    console.log("value", value)
+    this.setState({ filters: {
+        ...this.state.filters, 
+        [filter]: {
+          ...this.state.filters[filter], 
+          selectedValue: (this.state.filters[filter].selectedValue !== value) ? value : null
+        } 
+      } 
+    }, () => {
+      console.log("state", this.state.filters)
+      debugger
+    })
   }
   render(){
     const { classes, onChange } = this.props
@@ -117,13 +127,13 @@ class Filters extends Component {
           {
             Object.keys(filters)
             .map((f, i) => (
-              <Grid key={i} item>
+              <Grid key={`${i}-Filters`} item>
                   <Typography className={classes.filterLabel}>{filters[f].label}</Typography>
                   <Divider className={classes.divider} light />
                   <Grid alignItems="flex-start" direction="column" key={i} container>
                     {
-                      filters[f].values.map(v => (  
-                        <Button dense onClick={() => { onChange({ filter: f, value: v.value}) }}  
+                      filters[f].values.map((v, _i) => (  
+                        <Button key={`${_i}-Filters-Button`} dense onClick={() => { onChange({ filter: f, value: v.value}) }}  
                                       raised={filters[f].selectedValue === v.value}  
                                       className={classes.button}>{v.label}</Button>   
                       ))

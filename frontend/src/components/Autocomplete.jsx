@@ -175,7 +175,6 @@ class IntegrationAutosuggest extends React.Component {
 
   render() {
     const { classes } = this.props;
-    console.log("Classes", classes)
     return (
       <Autosuggest
         theme={{

@@ -16,7 +16,8 @@
     "material-ui": "next",
     "material-ui-icons": "^1.0.0-beta.17",
     "moment": "^2.20.1",
-    "react": "^16.1.1",
+    "node-sass-chokidar": "^0.0.3",
+    "react": "16.2.0",
     "react-apollo": "^2.0.4",
     "react-autosuggest": "^9.3.2",
     "react-dom": "^16.1.1",
@@ -26,11 +27,13 @@
     "redux": "^3.7.2",
     "screenfull": "^3.3.2",
     "typeface-roboto": "0.0.45",
-    "video-react": "^0.8.10",
+    "video-react": "file:../../video-react/",
     "video-resize": "^0.6.7"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "start-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "start": "REACT_APP_HOST=localhost react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

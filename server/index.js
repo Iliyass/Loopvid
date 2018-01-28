@@ -13,7 +13,8 @@ const GRAPHQL_PORT = process.env.PORT || 3000;
 
 const graphQLServer = express();
 // TODO : add DataLoaders and Mongodb Backend
-graphQLServer.use('/graphql', cors(), bodyParser.json(), apolloExpress(async (req) => { 
+graphQLServer.use('/graphql', cors(), bodyParser.json(), apolloExpress(async (req) => {
+   
   return {
     schema,
     context: {

@@ -21,16 +21,16 @@ class Listing extends React.Component {
   render(){
     const { classes } = this.props
     return (
-      <Grid container  justify="space-around" alignItems="center" direction="column">
+      <Grid container justify="space-around" alignItems="center" direction="column">
         {this.props.items.map((c, i) => (
           [
               i === 0 ?
-                <Typography className={classes.subheading} alignSelf="flex-start" type="subheading" gutterBottom>
+                <Typography key={`${i}-Card-Header`} className={classes.subheading}  type="subheading" gutterBottom>
                   Subheading
                 </Typography>
               : null
             ,
-            <Grid style={{ width: "100%"}} item key={i}>
+            <Grid style={{ width: "100%"}} item key={`${i}-Card-Video`}>
               <TrackVisibility>
                 <Card {...c} />  
               </TrackVisibility>            

@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
+import Utils from '../utils/';
+
 import Listing from '../components/Listing';
 import Filters from '../components/Filters';
 import { withStyles } from 'material-ui/styles';
 
-import { graphql } from 'react-apollo';
+import { graphql, compose } from 'react-apollo';
 import gql from 'graphql-tag';
+import { CircularProgress } from 'material-ui/Progress';
 
 const queryVideos = gql`
-  query allVideos{
-    videos(sort: { UploadDate: true }){
+  query allVideos($filter: Filter = {}, $sort: Sort = {}){
+    videos(filter: $filter, sort: $sort){
       id
       title
       src
@@ -26,42 +29,73 @@ const queryVideos = gql`
   }
 `
 
-const itemss = [
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals?sdd",
-    videoSrc: "portrait.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals?xcc",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals?sdww",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait3.mp4"
-  },
-]
+const queryStateUI = gql`
+  query getState {
+    stateUI @client{
+      searchMode
+      searchTerm
+      filtersResolution
+      filtersSort
+      filtersDuration
+      searchFiltersOpen
+    }
+  }
+`
 
 const styles = theme => ({
-
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  progress: {
+    alignSelf: "center",
+    marginTop: 40
+  }
 });
 class Recent extends Component {
+  componentWillReceiveProps(nextProps){
+    const previousStateUI = this.props.state.stateUI
+    const nextStateUI = nextProps.state.stateUI
+
+    const previousFilters = {
+      resolution: previousStateUI.filtersResolution,
+      duration: previousStateUI.filtersDuration,
+      sort: previousStateUI.filtersSort
+    }
+    const nextFilters = {
+      resolution: nextStateUI.filtersResolution,
+      duration: nextStateUI.filtersDuration,
+      sort: nextStateUI.filtersSort
+    }
+
+    if(Utils.deepDifference(previousFilters, nextFilters)){
+      const sort = nextFilters.sort ? {  [nextFilters.sort]: true } : {}
+      this.props.videos.refetch({
+          filter: { 
+            resolution: nextStateUI.filtersResolution,
+            duration: nextStateUI.filtersDuration
+          },
+          sort
+      })
+    }  
+  }
   render(){
-    const { classes, data } = this.props
-    if(data.loading) return "Loading...";
-    if(data.error) return "Sorry, Uknown error happend...";
+    const { classes, videos } = this.props
+    if(videos.error) return "Sorry, Uknown error happend...";
     return (
-        <div>
-          <Listing items={data.videos} />          
-        </div>
+        <Fragment>
+          { videos.loading
+            ? <CircularProgress className={classes.progress} size={50} />
+            : <Listing items={videos.videos} />   
+          }
+        </Fragment>
     )
   }
 }
-export default graphql(queryVideos)(withStyles(styles)(Recent))
+
+
+export default withStyles(styles)(compose(
+  graphql(queryStateUI, { name: 'state' }),  
+  graphql(queryVideos, { name: 'videos'})
+)(Recent));

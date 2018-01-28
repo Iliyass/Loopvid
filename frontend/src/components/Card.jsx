@@ -38,7 +38,9 @@ const styles = theme => ({
   },
   iconButton: {
     ...theme.typography.button,
-    margin: 10
+    margin: 10,
+    color: 'rgb(117, 117, 117)'
+    
   },
   flexGrow: {
     flex: '1 1 auto',
@@ -54,6 +56,7 @@ const styles = theme => ({
     ...theme.typography.iconButton,
     marginLeft: 15,
     marginRight: 34,
+    
   }
 })
 
@@ -82,6 +85,7 @@ class LVCard extends Component {
     const { classes, _id, isVisible, title, thumbnail, 
             upvotes, downvotes, published_at, src, user,
             mutateThumbup, mutateThumbdown } = this.props;
+            console.log("isVisible", isVisible)
     return (
       <Card className={classes.card}>
         <CardHeader
@@ -146,7 +150,6 @@ export default withStyles(styles)(compose (
     options: (props) => ({
        variables: { videoId: props.id } ,
        update: (proxy, { data }) => {
-         console.log("update", data.like)
          return {
             ...data.like
          }

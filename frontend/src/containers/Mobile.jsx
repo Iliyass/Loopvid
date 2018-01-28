@@ -101,7 +101,11 @@ const LabelBottomNavigationStyled = withStyles(stylesNav)(LabelBottomNavigation)
 
 const styles = theme => ({
   root: {
-    flexGrow: 1
+    marginTop: 55,
+    flexGrow: 1,
+    // alignItems: "center",
+    // justifyContent: "center",
+    flexDirection: "column"
   },
   flex: {
     flex: 1,
@@ -152,8 +156,6 @@ render() {
   const { classes } = this.props;
   const { data: { stateUI: { searchMode, searchFiltersOpen, filtersResolution, filtersSort, 
     filtersDuration } }, updateStateUI } = this.props
-  console.log("Mobile Props", this.props)
-  console.log("searchFiltersOpen", searchMode, searchFiltersOpen)
   return (
     <div className={classes.root}>
       <Sidebar open={this.state.sidebarOpen} onClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} onRequestClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} />
@@ -184,18 +186,22 @@ render() {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <div style={{ marginTop: "13%" }} >
         { searchFiltersOpen &&
           <Filters onChange={({ filter, value }) => { 
-                      const map = { resolution: 'filtersResolution', 
-                      sort: 'filtersSort', duration: 'filtersDuration' }
-                      updateStateUI(map[filter], value ) 
+                      const map = { 
+                        resolution: 'filtersResolution', 
+                        sort: 'filtersSort', 
+                        duration: 'filtersDuration' 
+                      }
+                      const previousValue = this.props.data.stateUI[map[filter]]
+                      updateStateUI(map[filter], value === previousValue ? null : value ) 
                     }} 
-                   selectedValues={{ resolution: filtersResolution, sort: filtersSort, duration: filtersDuration }} />
+                    selectedValues={{ resolution: filtersResolution, sort: filtersSort, duration: filtersDuration }} />
         }
-        {this.props.children}
+        <div>
+          {this.props.children}
+        </div>
         <LabelBottomNavigationStyled activePath={this.props.history.location.pathname} onNavigate={this.handleNavigate} />        
-      </div>
     </div>
   );
 }
