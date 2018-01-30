@@ -19,7 +19,7 @@ graphQLServer.use('/graphql', cors(), bodyParser.json(), apolloExpress(async (re
     schema,
     context: {
       isAuth: true,
-      user: await User.Model.findById('5a66378fe7cd5913362cf35b'),
+      user: await User.Model.findById('5a6e05ccf6ad593d7aefe31f'),
       Video: Video.Model,
       User: User.Model,
     },

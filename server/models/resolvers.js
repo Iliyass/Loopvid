@@ -74,25 +74,25 @@ const resolvers = {
       const { user } = context;
       const { nModified } = await user.update({ $addToSet: { likes: [videoId] } }).exec();
 
-      if (nModified) {
+      // if (nModified) {
         const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { upvotes: 1 } }).exec();
         return video;
-      }
+      // }
       return null;
     },
     async dislike(root, { videoId }, context) {
       const { user } = context;
       const { nModified } = await user.update({ $addToSet: { dislikes: [videoId] } }).exec();
 
-      if (nModified) {
+      // if (nModified) {
         const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { downvotes: 1 } }).exec();
         return video;
-      }
+      // }
       return null;
     },
   },
   Video: {
-    src: video => `http://${process.env.REACT_APP_HOST}/${video.src}`,
+    src: video => `http://${process.env.REACT_APP_CLIENT}/${video.src}`,
 
     user: async ({ user_id }) => User.Model.findOne({ _id: user_id }).exec(),
   },

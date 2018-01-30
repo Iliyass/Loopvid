@@ -18,6 +18,9 @@ const styles = theme => ({
 })
 
 class Listing extends React.Component {
+  componentWillReceiveProps(nextProps){
+    console.log("Listing","nextProps", nextProps);
+  }
   render(){
     const { classes } = this.props
     return (

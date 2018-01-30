@@ -70,22 +70,34 @@ class LVCard extends Component {
     this.handleThumbup = this.handleThumbup.bind(this)
     this.handleThumbdown = this.handleThumbdown.bind(this)
   }
+  componentWillReceiveProps(nextProps){
+    console.log('componentWillReceiveProps', nextProps)
+  }
   handleCardMenuClick(){
 
   }
   handleThumbdown(){
     const { id } = this.props
-    this.props.mutateThumbup();
+    this.props.mutateThumbdown();
   }
   handleThumbup(){
-    const { id } = this.props
-    this.props.mutateThumbup();
+    const { id, upvotes } = this.props
+    this.props.mutateThumbup({
+      variables: { videoId: id},
+      optimisticResponse: {
+        __typename: 'Mutation',
+        like: {
+          id: id,
+          __typename: 'Video',
+          upvotes: upvotes + 1,
+        },
+      },
+    });
   }
   render() {
     const { classes, _id, isVisible, title, thumbnail, 
             upvotes, downvotes, published_at, src, user,
             mutateThumbup, mutateThumbdown } = this.props;
-            console.log("isVisible", isVisible)
     return (
       <Card className={classes.card}>
         <CardHeader
@@ -103,11 +115,11 @@ class LVCard extends Component {
         <Video poster={thumbnail} videoSrc={src} isVisible={isVisible} />
         <CardActions >
           <div className={classes.controls}>
-            <IconButton onClick={mutateThumbup} className={classes.likeButton}>
+            <IconButton onClick={this.handleThumbup} className={classes.likeButton}>
               <ThumbUp />
               <Typography className={classes.iconButton} >{upvotes}</Typography>
             </IconButton>
-            <IconButton onClick={mutateThumbdown}>
+            <IconButton onClick={this.handleThumbdown}>
               <ThumbDown />
               <Typography className={classes.iconButton} >{downvotes}</Typography>
             </IconButton>
@@ -148,23 +160,13 @@ export default withStyles(styles)(compose (
   graphql(mutationLike, { 
     name: 'mutateThumbup',
     options: (props) => ({
-       variables: { videoId: props.id } ,
-       update: (proxy, { data }) => {
-         return {
-            ...data.like
-         }
-       }
+      variables: { videoId: props.id }
     })
   }),
   graphql(mutationDislike, { 
     name: 'mutateThumbdown',
     options: (props) => ({
-      variables: { videoId: props.id },
-      update: (proxy, { data }) => {
-        return {
-           ...data.dislike
-        }
-      }
+      variables: { videoId: props.id }
    })
   })
 )(LVCard));
