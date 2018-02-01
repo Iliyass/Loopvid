@@ -75,8 +75,8 @@ const resolvers = {
       const { nModified } = await user.update({ $addToSet: { likes: [videoId] } }).exec();
 
       // if (nModified) {
-        const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { upvotes: 1 } }).exec();
-        return video;
+        const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { upvotes: 1 } }, { new: true }).exec();
+        return video
       // }
       return null;
     },
@@ -85,7 +85,7 @@ const resolvers = {
       const { nModified } = await user.update({ $addToSet: { dislikes: [videoId] } }).exec();
 
       // if (nModified) {
-        const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { downvotes: 1 } }).exec();
+        const video = await context.Video.findOneAndUpdate({ _id: videoId }, { $inc: { downvotes: 1 } }, { new: true }).exec();
         return video;
       // }
       return null;

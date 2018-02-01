@@ -5,8 +5,9 @@ import { withClientState } from 'apollo-link-state';
 import { ApolloLink } from 'apollo-link';
 import gql from 'graphql-tag';
 
-const cache = new InMemoryCache();
-
+const cache = new InMemoryCache({
+  dataIdFromObject: o => o.id
+});
 const INITIAL_STATE = {
   stateUI: {
     __typename: 'stateUI',

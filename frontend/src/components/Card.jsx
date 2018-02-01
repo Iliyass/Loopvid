@@ -10,6 +10,7 @@ import IconButton from 'material-ui/IconButton';
 import red from 'material-ui/colors/red';
 import FavoriteIcon from 'material-ui-icons/Favorite';
 import ThumbUp from 'material-ui-icons/ThumbUp';
+import RemoveRedEye from 'material-ui-icons/RemoveRedEye';
 import ThumbDown from 'material-ui-icons/ThumbDown';
 import ShareIcon from 'material-ui-icons/Share';
 import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
@@ -21,6 +22,7 @@ import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { compose } from 'react-apollo';
 import moment from 'moment';
+import _ from 'lodash';
 
 const styles = theme => ({
   root: {
@@ -50,13 +52,28 @@ const styles = theme => ({
     alignItems: 'center',
     paddingLeft: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-
   },
   likeButton: {
     ...theme.typography.iconButton,
     marginLeft: 15,
-    marginRight: 34,
+  },
+  rightButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifySelf: 'flex-start',
+    alignSelf: 'flex-start'
     
+  },
+  actions: {
+    display: 'flex'
+  },
+  rate: {
+    margin: 0,
+    alignSelf: 'center'
+  },
+  CardActionsRoot: {
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   }
 })
 
@@ -70,33 +87,20 @@ class LVCard extends Component {
     this.handleThumbup = this.handleThumbup.bind(this)
     this.handleThumbdown = this.handleThumbdown.bind(this)
   }
-  componentWillReceiveProps(nextProps){
-    console.log('componentWillReceiveProps', nextProps)
-  }
   handleCardMenuClick(){
 
   }
   handleThumbdown(){
     const { id } = this.props
-    this.props.mutateThumbdown();
+    this.props.mutateThumbdown({ variables: { videoId: id } });
   }
   handleThumbup(){
-    const { id, upvotes } = this.props
-    this.props.mutateThumbup({
-      variables: { videoId: id},
-      optimisticResponse: {
-        __typename: 'Mutation',
-        like: {
-          id: id,
-          __typename: 'Video',
-          upvotes: upvotes + 1,
-        },
-      },
-    });
+    const { id  } = this.props
+    this.props.mutateThumbup({ variables: { videoId: id } });
   }
   render() {
     const { classes, _id, isVisible, title, thumbnail, 
-            upvotes, downvotes, published_at, src, user,
+            upvotes, viewCount, downvotes, published_at, src, user,
             mutateThumbup, mutateThumbdown } = this.props;
     return (
       <Card className={classes.card}>
@@ -113,18 +117,23 @@ class LVCard extends Component {
           subheader={moment(published_at).format("YYYY-MM-DD")}
         />
         <Video poster={thumbnail} videoSrc={src} isVisible={isVisible} />
-        <CardActions >
-          <div className={classes.controls}>
-            <IconButton onClick={this.handleThumbup} className={classes.likeButton}>
-              <ThumbUp />
-              <Typography className={classes.iconButton} >{upvotes}</Typography>
+        <CardActions classes={{root: classes.CardActionsRoot}} disableActionSpacing>
+            <IconButton className={classes.likeButton}>
+              <RemoveRedEye />
+              <Typography className={classes.iconButton} >{viewCount}</Typography>
             </IconButton>
-            <IconButton onClick={this.handleThumbdown}>
-              <ThumbDown />
-              <Typography className={classes.iconButton} >{downvotes}</Typography>
-            </IconButton>
-          </div>
-          <div className={classes.flexGrow} />
+            <div className={classes.rightButtons}>
+              <IconButton onClick={this.handleThumbup} className={classes.likeButton}>
+                <ThumbUp />
+                {/* <Typography className={classes.iconButton} >{upvotes}</Typography> */}
+              </IconButton>
+              <Typography className={[classes.iconButton, classes.rate]} >{ }</Typography>              
+              <IconButton onClick={this.handleThumbdown}>
+                <ThumbDown />
+                {/* <Typography className={classes.iconButton} >{downvotes}</Typography> */}
+              </IconButton>
+            </div>
+          {/* <div className={classes.flexGrow} /> */}
           {/* <IconButton aria-label="Show more">
               <ShareIcon />
             </IconButton> */}
@@ -156,17 +165,26 @@ const mutationDislike = gql`
 }
 `
 
+const queryVideos = gql`
+  query allVideos($filter: Filter, $sort: Sort){
+    videos(filter: $filter, sort: $sort){
+      id
+      title
+      src
+      thumbnail
+      upvotes
+      downvotes
+      published_at
+      user {
+        id
+        fullName
+        avatar
+      }
+    }
+  }
+`
+
 export default withStyles(styles)(compose ( 
-  graphql(mutationLike, { 
-    name: 'mutateThumbup',
-    options: (props) => ({
-      variables: { videoId: props.id }
-    })
-  }),
-  graphql(mutationDislike, { 
-    name: 'mutateThumbdown',
-    options: (props) => ({
-      variables: { videoId: props.id }
-   })
-  })
+  graphql(mutationLike, { name: 'mutateThumbup' }),
+  graphql(mutationDislike, { name: 'mutateThumbdown'})
 )(LVCard));

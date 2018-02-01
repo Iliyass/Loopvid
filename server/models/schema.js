@@ -19,7 +19,7 @@ const typeDefs = `
   }
 
   type Query {
-    videos(page: Int = 0, pageSize: Int = 10, filter: Filter, sort: Sort): [Video]!
+    videos(page: Int = 1, pageSize: Int = 10, filter: Filter, sort: Sort): [Video]!
     video(id: ID!): Video!
   }
 
