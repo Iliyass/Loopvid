@@ -24,6 +24,7 @@ export default class Video extends PureComponent {
     this._previousDelta = 0
   }
   componentWillReceiveProps(props){
+    console.log('isVisile', props.isVisible)
     if(props.isVisible){
       return this.refs.player.play()
     }

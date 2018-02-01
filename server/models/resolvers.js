@@ -20,7 +20,6 @@ const videoSRC = ['portrait.mp4', 'portrait2.mp4', 'portrait3.mp4'];
 
 
 const randomVideo = function randomVideo(users) {
-  console.log("users", users)
   const user_id = users[_.random(0, 9)]._id;
 
   return {

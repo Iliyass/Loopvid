@@ -43,7 +43,6 @@ class Listing extends React.PureComponent {
   render(){
     const { classes, query } = this.props
     return (
-      <Grid container direction="column">
         <InfiniteScroll
           pullDownToRefresh
           pullDownToRefreshContent={
@@ -52,7 +51,7 @@ class Listing extends React.PureComponent {
           releaseToRefreshContent={
             <h3 style={{textAlign: 'center'}}>&#8593; Release to refresh</h3>
           }
-          refreshFunction={() => console.log('refreshFunction')}
+          refreshFunction={query.refetch}
           next={query.fetchNextPage}
           hasMore={true}
           loader={<CircularProgress className={classes.progress} size={50} />}
@@ -66,7 +65,7 @@ class Listing extends React.PureComponent {
               <CircularProgress className={classes.progress} size={50} />
           }
           { 
-            !query.loading && this.props.items.map((c, i) => (
+            ! query.loading && this.props.items.map((c, i) => (
               [
                   i === 0 ?
                     <Typography key={`${i}-Card-Header`} className={classes.subheading}  type="subheading" gutterBottom>
@@ -82,10 +81,7 @@ class Listing extends React.PureComponent {
               ]
             ))
           } 
-
-
         </InfiniteScroll> 
-      </Grid> 
     )
   }
 }  

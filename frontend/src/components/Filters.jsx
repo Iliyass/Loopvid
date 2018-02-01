@@ -106,7 +106,6 @@ class Filters extends Component {
     })
   }
   handleFilterClick({ filter, value }){
-    console.log("value", value)
     this.setState({ filters: {
         ...this.state.filters, 
         [filter]: {
@@ -115,7 +114,6 @@ class Filters extends Component {
         } 
       } 
     }, () => {
-      console.log("state", this.state.filters)
       debugger
     })
   }

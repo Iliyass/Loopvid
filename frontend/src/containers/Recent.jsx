@@ -56,8 +56,6 @@ const styles = theme => ({
 });
 class Recent extends Component {
   componentWillReceiveProps(nextProps){
-    console.log('Recent componentWillReceiveProps ownProps', this.props.videos.videos)
-    console.log('Recent componentWillReceiveProps nextProps', nextProps.videos.videos)
     const previousStateUI = this.props.state.stateUI
     const nextStateUI = nextProps.state.stateUI
 
@@ -113,14 +111,12 @@ export default withStyles(styles)(compose(
             return fetchMore({
               variables: {
                 ...variables,
-                page: variables.page + 1
+                page: variables.page + 1,
+                pageSize: 3
               },
               updateQuery: (previousResult, { fetchMoreResult }) => {
                 if (!fetchMoreResult) { return previousResult; }
-                return Object.assign({}, previousResult, {
-                  // Append the new feed results to the old one
-                  videos: [...previousResult.videos, ...fetchMoreResult.videos],
-                });
+                return ({...previousResult, videos: [...previousResult.videos, ...fetchMoreResult.videos] })
               }
             })
           }
