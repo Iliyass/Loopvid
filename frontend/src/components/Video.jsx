@@ -5,7 +5,7 @@ import { Player, ControlBar, PlayToggle,
          CurrentTimeDisplay, DurationDisplay } from 'video-react';
 import AspectRatio from 'material-ui-icons/AspectRatio';
 import IconButton from 'material-ui/IconButton';
-
+import _ from 'lodash';
 
 const PlayButton = ({ onClick }) => (
   <div onClick={onClick} className="video-react-bezel" role="status" aria-label="play">
@@ -23,14 +23,16 @@ export default class Video extends PureComponent {
     this.handlePortraitFullscreen = this.handlePortraitFullscreen.bind(this)
     this._previousDelta = 0
   }
+  onVisible = _.debounce((isVisible, player) => {
+    if(isVisible){
+      return player.play()
+    }
+    if(! isVisible){
+      return player.pause()      
+    }
+  }, 900)
   componentWillReceiveProps(props){
-    console.log('isVisile', props.isVisible)
-    if(props.isVisible){
-      return this.refs.player.play()
-    }
-    if(! props.isVisible){
-      return this.refs.player.pause()      
-    }
+    this.onVisible(props.isVisible, this.refs.player)
   }
   componentDidMount() {
     // subscribe state change
