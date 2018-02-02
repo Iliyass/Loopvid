@@ -73,7 +73,9 @@ const styles = theme => ({
   },
   CardActionsRoot: {
     flexDirection: 'row',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    paddingLeft: 10,
+    paddingRight: 10
   }
 })
 
@@ -114,7 +116,7 @@ class LVCard extends Component {
             <CardMenu />
           }
           title={title}
-          subheader={moment(published_at).format("YYYY-MM-DD")}
+          subheader={moment(published_at).fromNow()}
         />
         <Video poster={thumbnail} videoSrc={src} isVisible={isVisible} />
         <CardActions classes={{root: classes.CardActionsRoot}} disableActionSpacing>

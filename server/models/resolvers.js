@@ -91,6 +91,7 @@ const resolvers = {
     },
   },
   Video: {
+    published_at: video => +new Date(video.published_at),
     src: video => `http://${process.env.REACT_APP_CLIENT}/${video.src}`,
 
     user: async ({ user_id }) => User.Model.findOne({ _id: user_id }).exec(),

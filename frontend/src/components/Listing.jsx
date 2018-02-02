@@ -73,7 +73,7 @@ class Listing extends React.PureComponent {
                     </Typography>
                   : null
                 ,
-                <Grid style={{ width: "100%"}} item key={`${i}-Card-Video`}>
+                <Grid style={{ width: "100%", marginBottom: 20 }} item key={`${i}-Card-Video`}>
                   <TrackVisibility>
                     <Card {...c} />  
                   </TrackVisibility>            

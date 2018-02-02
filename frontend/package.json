@@ -35,6 +35,7 @@
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "start-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
     "start": "REACT_APP_ENV=dev sh -ac '. .env.${REACT_APP_ENV}; react-scripts start'",
+    "start:prod": "REACT_APP_ENV=prod yarn run build && serve -s build",
     "build": "sh -ac '. .env.${REACT_APP_ENV}; react-scripts build'",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

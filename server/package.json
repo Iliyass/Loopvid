@@ -50,6 +50,7 @@
   },
   "scripts": {
     "start": "REACT_APP_ENV=dev sh -ac '. .env.${REACT_APP_ENV}; nodemon ./index.js --exec babel-node'",
+    "start:prod": "REACT_APP_ENV=prod sh -ac '. .env.${REACT_APP_ENV}; nodemon ./index.js --exec babel-node'",
     "debug": "PORT=5000 nodemon ./index.js --inspect-brk --exec babel-node",
     "flow:status": "flow status"
   },
