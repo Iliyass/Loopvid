@@ -131,6 +131,17 @@ const styles = theme => ({
   rightIcon: {
     marginLeft: theme.spacing.unit,
   },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1
+  },
+  container: {
+    position: 'relative' // For the overlay to work 
+  }
 });
 class ButtonAppBar extends React.PureComponent {
 constructor(props){
@@ -156,7 +167,6 @@ render() {
   const { classes } = this.props;
   const { data: { stateUI: { searchMode, searchFiltersOpen, filtersResolution, filtersSort, 
     filtersDuration } }, updateStateUI } = this.props
-  console.log('this.props.history.location.pathname', this.props.history.location.pathname)
   return (
     <div className={classes.root}>
       <Sidebar open={this.state.sidebarOpen} onClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} onRequestClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} />
@@ -199,7 +209,15 @@ render() {
                     }} 
                     selectedValues={{ resolution: filtersResolution, sort: filtersSort, duration: filtersDuration }} />
         }
-        <div>
+        <div className={classes.container}>
+          { searchMode && 
+            <div onClick={e => { 
+              updateStateUI('searchMode', !searchMode);
+              if(searchFiltersOpen){
+                updateStateUI('searchFiltersOpen', !searchFiltersOpen);
+              } 
+            }} className={classes.overlay}></div>
+          }
           {this.props.children}
         </div>
         <LabelBottomNavigationStyled 

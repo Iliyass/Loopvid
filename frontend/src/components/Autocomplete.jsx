@@ -193,7 +193,7 @@ class IntegrationAutosuggest extends React.Component {
         inputProps={{
           autoFocus: true,
           classes,
-          placeholder: 'Search a country (start with a)',
+          placeholder: 'type you what you want',
           value: this.state.value,
           onChange: this.handleChange,
           disableUnderline: true
