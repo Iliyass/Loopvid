@@ -1,74 +1,52 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import Listing from '../components/Listing';
-import Filters from '../components/Filters';
-
-const items = [
-  {
-    title: "Lorem Ipsum After HD should be here",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "bunny.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait4.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait3.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait3.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait3.mp4"
-  },
-  {
-    title: "Youtube on portrait mode!",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait2.mp4"
-  },
-  {
-    title: "Apple iPhone X Street Photography — First Impressions",
-    poster: "http://lorempixel.com/300/500/animals",
-    videoSrc: "portrait3.mp4"
-  },
-]
+import Listing from 'components/Listing';
+import Filters from 'components/Filters';
+import { withStyles } from 'material-ui/styles';
+import { graphql, compose } from 'react-apollo';
+import Q from 'apollo/queries';
 
 class Trending extends Component {
   render(){
+    const { videos } = this.props
     return (
-        <div>
-          <Listing items={items} />          
-        </div>
+      <Fragment>
+          <Listing items={videos.videos} query={videos} />   
+      </Fragment>
     )
   }
 }
 
-export default Trending
+
+export default withStyles({})(compose(
+  graphql(Q.QUERY_CLIENT_STATE_UI, { name: 'state' }),  
+  graphql(Q.QUERY_VIDEOS, { name: 'videos', 
+    options: { 
+      variables: { 
+        page: 1,
+        pageSize: 10 
+      } 
+    },
+    props({ videos: { fetchMore, variables, ...restProps }, ownProps }) {
+      return {
+        ...ownProps,
+        videos: {
+          ...restProps,
+          fetchNextPage() {
+            return fetchMore({
+              variables: {
+                ...variables,
+                page: variables.page + 1,
+                pageSize: 3
+              },
+              updateQuery: (previousResult, { fetchMoreResult }) => {
+                if (!fetchMoreResult) { return previousResult; }
+                return ({...previousResult, videos: [...previousResult.videos, ...fetchMoreResult.videos] })
+              }
+            })
+          }
+        }
+      }
+    }
+  })
+)(Trending));

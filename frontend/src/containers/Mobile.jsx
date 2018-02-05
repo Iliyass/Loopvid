@@ -69,7 +69,7 @@ class LabelBottomNavigation extends React.Component {
 
   getCurrentBotton(){
     const activePath = this.props.activePath || "/"
-    const routerFiltered = Object.keys(navRoutes).filter(r => activePath.lastIndexOf(navRoutes[r].path) === 0)
+    const routerFiltered = Object.keys(navRoutes).filter(r => activePath === navRoutes[r].path)
     return routerFiltered.length ? routerFiltered[0] : 'recents'
   }
   handleChange = (event, value) => {
@@ -156,6 +156,7 @@ render() {
   const { classes } = this.props;
   const { data: { stateUI: { searchMode, searchFiltersOpen, filtersResolution, filtersSort, 
     filtersDuration } }, updateStateUI } = this.props
+  console.log('this.props.history.location.pathname', this.props.history.location.pathname)
   return (
     <div className={classes.root}>
       <Sidebar open={this.state.sidebarOpen} onClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} onRequestClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} />
@@ -201,7 +202,9 @@ render() {
         <div>
           {this.props.children}
         </div>
-        <LabelBottomNavigationStyled activePath={this.props.history.location.pathname} onNavigate={this.handleNavigate} />        
+        <LabelBottomNavigationStyled 
+          activePath={this.props.history.location.pathname} 
+          onNavigate={this.handleNavigate} />        
     </div>
   );
 }

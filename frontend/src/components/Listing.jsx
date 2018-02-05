@@ -54,7 +54,7 @@ class Listing extends React.PureComponent {
           refreshFunction={query.refetch}
           next={query.fetchNextPage}
           hasMore={true}
-          loader={[<CardLoader />, <CardLoader />]}
+          loader={[<CardLoader key={`${1}-CardLoader`} />, <CardLoader key={`${2}-CardLoader`} />]}
           endMessage={
             <p style={{textAlign: 'center'}}>
               <b>Yay! You have seen it all</b>

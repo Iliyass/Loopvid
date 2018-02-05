@@ -8,7 +8,7 @@ import Recent from './containers/Recent';
 import Categories from './containers/Categories';
 import Trending from './containers/Trending';
 import SingleCategory from './containers/SingleCategory';
-import { Router, Route, Link } from 'react-router-dom'
+import { Router, Route, Link, Switch } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory'
 import GraphQLClient from './apollo/client';
 import { ApolloProvider } from 'react-apollo';
@@ -28,10 +28,13 @@ class App extends Component {
       <ApolloProvider client={GraphQLClient}>
           <Router history={history}>
             <Mobile history={history}>
+              <Switch>
                 <Route exact={true} path="/" component={Recent} />
                 <Route exact={true} path="/trending" component={Trending} />
                 <Route exact={true} path="/categories" component={Categories} />
                 <Route exact={true} path="/categories/:category" component={SingleCategory} />
+                <Route component={NoMatch}/>  
+              </Switch>
             </Mobile>
           </Router>
           </ApolloProvider>
