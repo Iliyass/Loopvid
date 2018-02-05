@@ -24,11 +24,17 @@ export default class Video extends PureComponent {
     this._previousDelta = 0
   }
   onVisible = _.debounce((isVisible, player) => {
-    if(isVisible){
-      return player.play()
-    }
-    if(! isVisible){
-      return player.pause()      
+    try{
+      if(! player){ return; }
+
+      if(isVisible){
+        return player.play()
+      }
+      if(! isVisible){
+        return player.pause()      
+      }
+    }catch(e){
+      return this.onVisible.cancel()
     }
   }, 900)
   componentWillReceiveProps(props){
