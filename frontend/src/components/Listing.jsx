@@ -8,7 +8,7 @@ import { withStyles } from 'material-ui/styles';
 import Divider from 'material-ui/Divider';
 import { CircularProgress } from 'material-ui/Progress';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
+import CardLoader from './CardLoader';
 
 const styles = theme => ({
   subheading: {
@@ -54,16 +54,16 @@ class Listing extends React.PureComponent {
           refreshFunction={query.refetch}
           next={query.fetchNextPage}
           hasMore={true}
-          loader={<CircularProgress className={classes.progress} size={50} />}
+          loader={[<CardLoader />, <CardLoader />]}
           endMessage={
             <p style={{textAlign: 'center'}}>
               <b>Yay! You have seen it all</b>
             </p>
           }>   
-          {
+          {/* {
             query.loading &&
               <CircularProgress className={classes.progress} size={50} />
-          }
+          } */}
           { 
             ! query.loading && this.props.items.map((c, i) => (
               [
