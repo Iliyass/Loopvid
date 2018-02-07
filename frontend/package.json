@@ -26,6 +26,7 @@
     "react-on-screen": "^2.0.1",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.0.17",
+    "react-swipeable-views": "^0.12.12",
     "redux": "^3.7.2",
     "screenfull": "^3.3.2",
     "typeface-roboto": "0.0.45",

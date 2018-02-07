@@ -6,6 +6,7 @@ import { Player, ControlBar, PlayToggle,
 import AspectRatio from 'material-ui-icons/AspectRatio';
 import IconButton from 'material-ui/IconButton';
 import _ from 'lodash';
+import RelatedVideo from 'components/RelatedVideo';
 
 const PlayButton = ({ onClick }) => (
   <div onClick={onClick} className="video-react-bezel" role="status" aria-label="play">
@@ -23,9 +24,11 @@ export default class Video extends PureComponent {
     this.handlePortraitFullscreen = this.handlePortraitFullscreen.bind(this)
     this._previousDelta = 0
   }
-  onVisible = _.debounce((isVisible, player) => {
+  onVisible = (isVisible, player) => {
     try{
       if(! player){ return; }
+
+      if(this.state.player.ended){ return; }
 
       if(isVisible){
         return player.play()
@@ -36,7 +39,7 @@ export default class Video extends PureComponent {
     }catch(e){
       return this.onVisible.cancel()
     }
-  }, 900)
+  }
   componentWillReceiveProps(props){
     this.onVisible(props.isVisible, this.refs.player)
   }
@@ -55,7 +58,10 @@ export default class Video extends PureComponent {
     this.refs.player.video.video.style.width = zoomWidth
     this.setState({ zoomed: !this.state.zoomed })
   }
+  
   render(){
+    const { isVisible } = this.props
+    const { player } = this.state
     return (
       <Player
         // onMouseDown={() => { 
@@ -72,6 +78,9 @@ export default class Video extends PureComponent {
       {/* {! this.state.player.hasStarted && 
         <PlayButton onClick={() => this.refs.player.play()} />
       } */}
+        { ( isVisible && player.ended ) &&
+          <RelatedVideo />        
+        }
         <ControlBar disableDefaultControls={true} autoHide={false} >
           <PlayToggle />
           <CurrentTimeDisplay />

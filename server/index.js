@@ -28,6 +28,6 @@ graphQLServer.use('/graphql', cors(), bodyParser.json(), apolloExpress(async (re
 graphQLServer.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 graphQLServer.listen(GRAPHQL_PORT, async () => {
-  Database.connect('mongodb://localhost:27017/loopvid');
+  Database.connect('mongodb://localhost:27080/loopvid');
   console.log(`GraphiQL is now running on http://localhost:${GRAPHQL_PORT}/graphiql`);
 });

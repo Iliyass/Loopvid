@@ -10,7 +10,7 @@ services:
       - loopvid
     image: mongo:3.2
     ports:
-        - "27017:27017"
+        - "27080:27017"
     volumes:
       - ./db_data:/data/db
 
@@ -28,7 +28,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     environment:
       - DEBUG=True
-      - MONGODB_PORT=27017
+      - MONGODB_PORT=27080
       - MONGODB_SERVER=db
       - MONGODB_DB=loopvid
 
