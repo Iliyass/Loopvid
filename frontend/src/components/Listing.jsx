@@ -44,7 +44,7 @@ class Listing extends React.PureComponent {
     const { classes, query } = this.props
     return (
         <InfiniteScroll
-          pullDownToRefresh
+          // pullDownToRefresh // TODO: when switiching routes there is an error thrown of style is null
           pullDownToRefreshContent={
             <h3 style={{textAlign: 'center'}}>&#8595; Pull down to refresh</h3>
           }

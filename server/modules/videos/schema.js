@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Tag from '../tags/schema';
 
 mongoose.Promise = require('bluebird');
 
@@ -23,6 +24,7 @@ const DBSchema = new Schema({
   created_at: { type: Date, default: Date.now },
   published_at: Date,
   user_id: { type: Schema.Types.ObjectId, ref: 'User' },
+  tags: [Tag.Schema]
 });
 
 

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Seeders from '../models/seeders';
 
 
 const connect = function connect(uri, options) {
@@ -6,6 +7,13 @@ const connect = function connect(uri, options) {
     mongoose.connect(uri, {
       ...options,
     });
+
+    // mongoose.connection.on('open', function(){
+    //   mongoose.connection.db.dropDatabase(function (err) {
+    //     console.log('db dropped');
+    //     Seeders()        
+    //   });
+    //  })
   } catch (err) {
     console.error('ERROR', err);
   }

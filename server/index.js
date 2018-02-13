@@ -8,6 +8,7 @@ import schema from './models/schema';
 import Database from './database/';
 import Video from './modules/videos/schema';
 import User from './modules/users/schema';
+import Tag from './modules/tags/schema';
 
 const GRAPHQL_PORT = process.env.PORT || 3000;
 
@@ -22,6 +23,7 @@ graphQLServer.use('/graphql', cors(), bodyParser.json(), apolloExpress(async (re
       user: await User.Model.findById('5a6e05ccf6ad593d7aefe31f'),
       Video: Video.Model,
       User: User.Model,
+      Tag: Tag.Model,
     },
   };
 }));

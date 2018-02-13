@@ -24,6 +24,8 @@ const typeDefs = `
   }
 
   type Mutation {
+    createTag(name: String!): Tag
+    
     login(email: String!, password: String!): User
     signup(email: String!, password: String!, fullName: String!): User
     
@@ -37,7 +39,10 @@ const typeDefs = `
     SD
     HD
   }
-
+  type Tag {
+    id: ID!
+    name: String!
+  }
   type Video {
     id: ID!
     title: String!
@@ -53,6 +58,7 @@ const typeDefs = `
     created_at: Date
     published_at: Date
     user: User!
+    tags: [Tag!]
   }
   type Like {
     ObjectID: ID!
