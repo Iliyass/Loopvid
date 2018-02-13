@@ -29,7 +29,7 @@ export default class Video extends PureComponent {
       if(! player){ return; }
 
       if(this.state.player.ended){ return; }
-
+      // TODO: You should trigger click not play, because android is starting to block API play
       if(isVisible){
         return player.play()
       }

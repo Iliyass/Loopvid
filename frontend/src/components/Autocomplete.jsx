@@ -105,7 +105,7 @@ function getSuggestions(value) {
   const inputValue = value.trim().toLowerCase();
   const inputLength = inputValue.length;
   let count = 0;
-
+  return []
   return inputLength === 0
     ? []
     : suggestions.filter(suggestion => {
@@ -147,11 +147,15 @@ const styles = theme => ({
 });
 
 class IntegrationAutosuggest extends React.Component {
+  constructor(props){
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
+  }
   state = {
     value: '',
     suggestions: [],
   };
-
+  
   handleSuggestionsFetchRequested = ({ value }) => {
     this.setState({
       suggestions: getSuggestions(value),
@@ -168,7 +172,11 @@ class IntegrationAutosuggest extends React.Component {
     this.setState({
       value: newValue,
     });
+
     if(method === 'click') {
+      this.props.onSearch(newValue)
+    }
+    if(method === 'Enter') {
       this.props.onSearch(newValue)
     }
   };
@@ -196,6 +204,7 @@ class IntegrationAutosuggest extends React.Component {
           placeholder: 'type you what you want',
           value: this.state.value,
           onChange: this.handleChange,
+          onKeyPress: ({ key }) => key === 'Enter' ? this.handleChange(null, { newValue: this.state.value, method: 'Enter'}) : null ,
           disableUnderline: true
         }}
       />
@@ -207,7 +216,7 @@ IntegrationAutosuggest.propTypes = {
   classes: PropTypes.object.isRequired,
   onSearch: PropTypes.func
 };
-IntegrationAutosuggest.defaultProp = {
+IntegrationAutosuggest.defaultProps = {
   onSearch: () => {}
 }
 

@@ -141,12 +141,17 @@ const styles = theme => ({
   },
   container: {
     position: 'relative' // For the overlay to work 
+  },
+  filtersButton: {
+    color: 'white'
+    
   }
 });
 class ButtonAppBar extends React.PureComponent {
 constructor(props){
   super(props)
   this.handleNavigate = this.handleNavigate.bind(this)
+  this.handleSearch = this.handleSearch.bind(this)
   this.state = {
     searchMode: false,
     nestedRoute: false,
@@ -157,22 +162,51 @@ constructor(props){
 handleNavigate(routeValue){
   this.props.history.push(`${routeValue}`)
 }
+handleSearch(searchTerm){
+  const { updateStateUI, data: { stateUI: { searchFiltersOpen } }  } = this.props
+  updateStateUI('searchTerm', searchTerm)
+  updateStateUI('searchMode', true)
+}
 renderSearchBar(){
   const { classes } = this.props;
+  const { data: { stateUI: { searchMode, searchFiltersOpen, searchTerm } }, updateStateUI } = this.props
   return (
+    <Toolbar>
+      <IconButton key={"menu-1"} onClick={e => updateStateUI('searchMode', !searchMode)}  className={classes.menuButton} color="contrast" aria-label="Menu">
+        <ArrowBack />
+      </IconButton>
       <Autocomplete onSearch={this.handleSearch} />
+      <IconButton className={classes.filtersButton} onClick={e => updateStateUI('searchFiltersOpen', !searchFiltersOpen)}>
+          <FilterListIcon/>
+      </IconButton>
+    </Toolbar>
   )
 }
 render() {  
   const { classes } = this.props;
-  const { data: { stateUI: { searchMode, searchFiltersOpen, filtersResolution, filtersSort, 
-    filtersDuration } }, updateStateUI } = this.props
+  const { data: { stateUI: { searchTerm, searchMode, searchFiltersOpen, filtersResolution, filtersSort, 
+    filtersDuration } }, updateStateUI } = this.props    
   return (
     <div className={classes.root}>
       <Sidebar open={this.state.sidebarOpen} onClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} onRequestClose={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} />
       <AppBar position="fixed">
-        <Toolbar>
-          { ! searchMode ? [
+        {
+          searchMode ? 
+            this.renderSearchBar()
+          : <Toolbar>
+              <IconButton onClick={() => this.setState({ sidebarOpen: !this.state.sidebarOpen })} key={"menu-2"} className={classes.menuButton} color="contrast" aria-label="Menu">
+                <MenuIcon />
+              </IconButton>
+              <Typography key={"logo-1"} type="title" color="inherit" className={classes.flex}>
+                Loopvid
+              </Typography>
+              <IconButton onClick={e => updateStateUI('searchMode', !searchMode)} color="contrast">
+                <SearchIcon />
+              </IconButton>
+            </Toolbar>
+        }
+        
+          {/* { ! searchMode ? [
               this.state.nestedRoute ? 
                 <IconButton key={"menu-1"} className={classes.menuButton} color="contrast" aria-label="Menu">
                   <ArrowBack />
@@ -192,10 +226,7 @@ render() {
                 <FilterListIcon className={classes.leftIcon}/>
             </IconButton>
           }
-          <IconButton onClick={e => updateStateUI('searchMode', !searchMode)} color="contrast">
-            <SearchIcon />
-          </IconButton>
-        </Toolbar>
+        </Toolbar> */}
       </AppBar>
         { searchFiltersOpen &&
           <Filters onChange={({ filter, value }) => { 
@@ -209,6 +240,7 @@ render() {
                     }} 
                     selectedValues={{ resolution: filtersResolution, sort: filtersSort, duration: filtersDuration }} />
         }
+
         <div className={classes.container}>
           { searchMode && 
             <div onClick={e => { 

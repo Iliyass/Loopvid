@@ -16,7 +16,8 @@ const INITIAL_STATE = {
     filtersResolution: null,
     filtersSort: null,
     filtersDuration: null,
-    searchFiltersOpen: false
+    searchFiltersOpen: false,
+    searchSuggestions: []
   }
 }
 

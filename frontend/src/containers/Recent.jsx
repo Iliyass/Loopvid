@@ -62,12 +62,14 @@ class Recent extends Component {
     const previousFilters = {
       resolution: previousStateUI.filtersResolution,
       duration: previousStateUI.filtersDuration,
-      sort: previousStateUI.filtersSort
+      sort: previousStateUI.filtersSort,
+      searchTerm: previousStateUI.searchTerm
     }
     const nextFilters = {
       resolution: nextStateUI.filtersResolution,
       duration: nextStateUI.filtersDuration,
-      sort: nextStateUI.filtersSort
+      sort: nextStateUI.filtersSort,
+      searchTerm: nextStateUI.searchTerm      
     }
 
     if(Utils.deepDifference(previousFilters, nextFilters)){
@@ -77,7 +79,8 @@ class Recent extends Component {
             resolution: nextStateUI.filtersResolution,
             duration: nextStateUI.filtersDuration
           },
-          sort
+          sort,
+          // TODO: You should add another screen for Search results and a GraphQL query for ElasticSearch
       })
     }  
   }
